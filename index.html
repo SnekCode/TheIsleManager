@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <title>The Isle Manager</title>
+  </head>
+  <body>
+    <p id="message">PlaceHolder</p>
+    <p id="init-hint">To use this tool make sure legacy is installed first</p>
+    <button id="init-setup">Init Set Up</button>
+    <p id="evrima-instructions">Please install Evirma by going to steam > Library > Right Click on The Isle > Properties > Betas > Select Evrima </p>
+    <p id="evrima-check">Evrima is not installed</p>
+      <button id="config-legacy">Set Up For Legacy</button>
+      <button id="config-evrima">Set Up For Evrima</button>
+      <button id="start-legacy">Start Legacy</button>
+      <button id="start-evrima">Start Evrima</button>
+  </body>
+  
+  <script src="renderer.js"></script>
+</html>
