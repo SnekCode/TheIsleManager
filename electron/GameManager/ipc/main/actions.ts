@@ -117,7 +117,7 @@ ipcMain.on("stopCheckEvrima", (_, __) => {
   }
 });
 
-ipcMain.on(EChannels.lock, (event, args) => {
+ipcMain.on(EChannels.lock, (_, args) => {
   console.log("test", args);
   setTimeout(() => {
     getWin().webContents.send("lock", args);
