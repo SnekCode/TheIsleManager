@@ -1,4 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import "./GameManager/api"
+import "./GameManager/lock"
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))

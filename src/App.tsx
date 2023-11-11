@@ -1,36 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/electron-vite.animate.svg'
-import './App.scss'
-import Button from 'Components/Button'
+import { useState } from "react";
+import evrimaBg from "./assets/EvrimaBackground.png";
+import legacyBg from "./assets/LegacyBackground.png";
+import "./App.scss";
+
+const games = {
+  evrima: {
+    name: "Evrima",
+    bg: evrimaBg,
+  },
+  legacy: {
+    name: "Legacy",
+    bg: legacyBg,
+  },
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [nextGame, setNextGame] = useState(games.evrima);
+  const [game, setGame] = useState(games.legacy);
 
   return (
     <>
-      <div>
-        <a href="https://electron-vite.github.io" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div
+        className="splash"
+        style={{ backgroundImage: `url(${game.bg})` }}
+      ></div>
+      <div className="game-container">
+        <h2
+          className="selectGame"
+          onClick={() => {
+            setGame(nextGame);
+            setNextGame(game);
+          }}
+        >
+          Select Your Version: {game.name}
+        </h2>
+          <div className="playButtonContainer">
+            <div className="playButton">Play Game</div>
+          </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Button onClick={() => setCount((count) => count + 1)}>
-        count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

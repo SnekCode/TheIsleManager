@@ -32,7 +32,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
     // set title
-    title: `Electron Vite ${packagejson.version}`,
+    title: `The Isle Manager ${packagejson.version}`,
   })
 
   // Test active push message to Renderer-process.
