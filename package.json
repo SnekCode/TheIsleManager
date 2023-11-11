@@ -1,20 +1,21 @@
 {
   "name": "theislemanager",
   "description": "A Dino Game Manager for The Isle",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.1-alpha.1",
   "author": "SnekCode",
   "license": "ISC",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && electron-builder",
+    "build": "tsc && vite build && electron-builder --publish never",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "publish": "electron-builder --publish always"
   },
   "dependencies": {
     "electron-forge": "^5.2.4",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.4",
     "less": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

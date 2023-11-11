@@ -1,5 +1,12 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
+import packagejson from '../package.json'
+
+// handle update
+import { autoUpdater } from 'electron-updater'
+
+// handle auto update
+autoUpdater.checkForUpdatesAndNotify()
 
 // The built directory structure
 //
@@ -24,6 +31,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+    // set title
+    title: `Electron Vite ${packagejson.version}`,
   })
 
   // Test active push message to Renderer-process.

@@ -6,6 +6,7 @@
   "appId": "io.github.theislemanager",
   "asar": true,
   "productName": "TheIsleManager",
+  "forceCodeSigning": true,
   "directories": {
     "output": "release/${version}"
   },
@@ -15,7 +16,7 @@
   ],
   "publish": {
     "provider": "github",
-    "owner": "TheIsleManager",
+    "owner": "SnekCode",
     "repo": "TheIsleManager"
   },
   "mac": {
@@ -33,7 +34,8 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "publisherName": "SnekCode"
   },
   "nsis": {
     "oneClick": false,
