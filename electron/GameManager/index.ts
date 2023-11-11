@@ -1,18 +1,12 @@
-// import fs from 'fs'
-// import { execFile } from 'child_process';
-const fs = require('fs');
-const { execFile } = require('child_process');
+import fs from 'fs'
+import { execFile } from 'child_process';
+import { EGameNames } from 'Shared/gamenames';
 
 const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
-const ONEDRIVE = process.env.ONEDRIVE;
 
-// enum of game names
-const gameNames = {
-    legacy: 'legacy',
-    evrima: 'evrima'
-}
+type TGameNames = 'legacy' | 'evrima';
 
-const config = {
+export const config = {
     steam: {
       path: 'C:\\Program Files (x86)\\Steam',
     },
@@ -31,10 +25,11 @@ const config = {
       thisStandbyAppDataName: 'TheIsleEvirma',
       otherStandbyAppDataName: 'TheIsleLegacy',
       installIndicator: 'EasyAntiCheat',
+      isEvrimaAppDataFolderIndicator: 'Saved\\Config\\WindowsClient\\ApexDestruction.ini',
     }
 }
 
-function setUpLegacy(){
+export function setUpLegacy(){
 
   // confirm legacy is installed as evrima path
   if(fs.existsSync(config.evrima.path) && fs.existsSync(`${config.evrima.path}\\${config.legacy.installIndicator}`)){
@@ -45,15 +40,14 @@ function setUpLegacy(){
     
     fs.writeFileSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
     // create a shortcut (symlink) named TheIsleLegacy on the OneDrive // desktop
-    // fs.symlinkSync(`${config.legacy.path}\\${config.legacy.name}`, `${ONEDRIVE}\\Desktop\\The Isle - Legacy`, 'file')
-    checkInAppData('legacy');
+    checkInAppData(EGameNames.legacy);
     return true
   }else if(checksForInstall('legacy')){
     if(fs.existsSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`)){
       fs.writeFileSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
     }
     // game is installed as legacy
-    checkInAppData('legacy');
+    checkInAppData(EGameNames.legacy);
     return true
   }else {
     // game is not installed as legacy
@@ -61,34 +55,33 @@ function setUpLegacy(){
   }
 }
 
-// function setUpEvrima(){
-//     fs.symlinkSync(`${config.evrima.path}\\${config.evrima.name}`, `${ONEDRIVE}\\Desktop\\The Isle - Evrima`, 'file')
-// }
-
 let attempts = 0;
 let maxAttempts = 10;
 
-function checkInAppData(name){
+export function checkInAppData(name: EGameNames){
     const game = config[name];
     console.log('checkInAppData', name);
+
     if(fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
       console.log('already checked in');
       return;
     }
     try{
       fs.renameSync(`${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`, `${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`);
-    }catch(e){
+    }catch(e: any){
       if(e.code === 'EPERM' && attempts < maxAttempts){
         console.log('waiting for access', attempts);
         attempts++;
         setTimeout(() => {
           checkInAppData(name);
         }, 1000);
+    }else {
+      return;
     }
   }
 }
 
-function checkOutAppData(name){
+export function checkOutAppData(name: TGameNames){
     const game = config[name];
     if(!fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
       console.log('already checked out');
@@ -101,23 +94,28 @@ function checkOutAppData(name){
     }
 }
 
-function swapVersion(name){
-  if(name === 'legacy'){
-    // first check if evrima is set
-    checkInAppData('evrima');
-    checkOutAppData('legacy');
-  }else if (name === 'evrima'){
-    // first check if legacy is setup
-    checkInAppData('legacy');
-    checkOutAppData('evrima');
+export function swapVersion(name: TGameNames){
+  const currentGame = checkCurrentAppDataFolderType();
+
+  if( currentGame === name){
+    return true;
+  }else{
+    checkInAppData(currentGame)
+    checkOutAppData(name);
   }
+  return checkCurrentAppDataFolderType() === name
 }
 
-function checksForInstall(name){
+export function checkCurrentAppDataFolderType(): EGameNames{
+  return fs.existsSync(`${LOCAL_APP_DATA}\\${config.evrima.runtimeAppDataName}\\${config.evrima.isEvrimaAppDataFolderIndicator}`) ? EGameNames.evrima : EGameNames.legacy;
+}
+
+
+export function checksForInstall(name: TGameNames){
   return fs.existsSync(config[name].path) && fs.existsSync(`${config[name].path}\\${config[name].installIndicator}`)
 }
 
-function startGame(name){
+export function startGame(name: TGameNames){
     const game = config[name];
     const gameExe = `${game.path}\\${game.name}`;
     //check for standbyAppData Folder
@@ -130,15 +128,4 @@ function startGame(name){
         }, 5000);
       });
     })
-}
-
-// export modules
-module.exports = {
-    checkOutAppData,
-    checkInAppData,
-    startGame,
-    setUpLegacy,
-    // setUpEvrima,
-    gameNames,
-    checksForInstall,
 }

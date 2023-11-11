@@ -24,14 +24,22 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "electron/*": ["electron/*"],
+      "~/*": ["./*"],
       "Components/*": ["src/Components/*"],
       "Interfaces/": ["src/Data/Interfaces/", "src/Data/Interfaces/*"],
       "Utilities/*": ["src/Utilities/*"],
       "Objects/*": ["src/Data/Objects/*"],
       "Styles/*": ["src/Styles/*"],
+      "Providers/*": ["src/Providers/*"],
+      "Shared/*": ["Shared/*"],
+      "Electron/*": ["electron/*"],
     }
   },
-  "include": ["src", "electron"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "electron", "Shared"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+
+  /* For ts-node */
+  "ts-node": {
+    "esm": true
+}
 }

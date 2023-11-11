@@ -24,4 +24,18 @@ declare namespace NodeJS {
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
   ipcRenderer: import('electron').IpcRenderer
+  api: {
+    send: (channel: string, data: any) => void
+    receive: (channel: string, func: Function) => void
+    clearListeners: (channel: string) => void
+    retrieveFromStore: (name: string, func: Function) => void
+    saveToStore: (name: string, data: any) => void
+  }
+  init: {
+    setupLegacy: () => void
+  }
+  test: {
+    test: () => void
+  }
+  lock: boolean
 }

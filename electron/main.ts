@@ -1,9 +1,13 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'node:path'
-import packagejson from '../package.json'
+import packagejson from '~/package.json'
 
 // handle update
 import { autoUpdater } from 'electron-updater'
+
+// load main ipc actions
+import './GameManager/ipc/main/actions'
+import './ipc/main/store'
 
 // handle auto update
 autoUpdater.checkForUpdatesAndNotify()
@@ -21,7 +25,7 @@ process.env.DIST = path.join(__dirname, '../dist')
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 
-let win: BrowserWindow | null
+export let win: BrowserWindow
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
@@ -34,7 +38,7 @@ function createWindow() {
     // set title
     title: `The Isle Manager ${packagejson.version}`,
   })
-
+  win.webContents.openDevTools({ mode: 'detach' });
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
@@ -54,6 +58,7 @@ function createWindow() {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
+    // @ts-expect-error win is not null
     win = null
   }
 })
@@ -66,4 +71,7 @@ app.on('activate', () => {
   }
 })
 
+
 app.whenReady().then(createWindow)
+
+export const getWin = () => win

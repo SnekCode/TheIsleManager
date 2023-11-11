@@ -1,12 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import "./GameManager/api"
-import "./GameManager/lock"
+import "./GameManager/ipc/preload/api"
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
-function withPrototype(obj: Record<string, any>) {
+export function withPrototype(obj: Record<string, any>) {
   const protos = Object.getPrototypeOf(obj)
 
   for (const [key, value] of Object.entries(protos)) {
