@@ -3,8 +3,11 @@ import Store from 'electron-store';
 
 const store = new Store();
 
-console.log(store.path);
-
+// config init values
+// loaded game
+if (store.get('loadedGame') !== 'legacy' || store.get('loadedGame') !== 'evrima') {
+  store.set('loadedGame', 'legacy');
+}
 
 ipcMain.handle('getStore', (_, name) => {
   return store.get(name);
