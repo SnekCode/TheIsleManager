@@ -44,7 +44,10 @@ function createWindow() {
     // set title
     title: `The Isle Manager ${packagejson.version}`,
   })
-  win.webContents.openDevTools({ mode: 'detach' });
+  // if dev mode with vite
+  if(import.meta.env.DEV){
+    win.webContents.openDevTools({ mode: 'detach' });
+  }
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
