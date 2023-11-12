@@ -1,8 +1,23 @@
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white&link=https://vitejs.dev/) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB&link=https://reactjs.org/) ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white&link=https://www.electronjs.org/) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white&link=https://www.typescriptlang.org/) ![Version](https://img.shields.io/github/v/release/SnekCode/TheIsleManager?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2FSnekCode%2FTheIsleManager%2Freleases
-)
-
-
-# The Isle Manager
+<p align="center">
+    <h1 align="center">The Isle Manager</h1>
+</p>
+<p align="center">
+    <a href="https://vitejs.dev/">
+    <img src="https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white" />
+    </a>
+    <a href="https://reactjs.org">
+      <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB">
+    </a>  
+    <a href="https://www.electronjs.org/">
+      <img src="https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white">
+    </a>
+    <a href="https://www.typescriptlang.org/">
+      <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white">
+    </a>
+    <a href="https://github.com/SnekCode/TheIsleManager/releases">
+      <img src="https://img.shields.io/github/v/release/SnekCode/TheIsleManager?style=for-the-badge&logo=github">
+    </a>
+</p>
 
 The Isle Manager is an application designed to manage the game settings and paths for two different versions of a game called "The Isle". The two versions of the game are the deprecated Legacy version and the new Evrima version.
 
