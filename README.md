@@ -1,4 +1,5 @@
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Version](https://img.shields.io/github/v/release/SnekCode/TheIsleManager?style=for-the-badge&logo=github)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white&link=https://vitejs.dev/) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB&link=https://reactjs.org/) ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white&link=https://www.electronjs.org/) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white&link=https://www.typescriptlang.org/) ![Version](https://img.shields.io/github/v/release/SnekCode/TheIsleManager?style=for-the-badge&logo=github&link=https%3A%2F%2Fgithub.com%2FSnekCode%2FTheIsleManager%2Freleases
+)
 
 
 # The Isle Manager
