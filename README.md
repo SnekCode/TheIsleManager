@@ -1,3 +1,6 @@
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Version](https://img.shields.io/github/v/release/SnekCode/TheIsleManager?style=for-the-badge&logo=github)
+
+
 # The Isle Manager
 
 The Isle Manager is an application designed to manage the game settings and paths for two different versions of a game called "The Isle". The two versions of the game are the deprecated Legacy version and the new Evrima version.
@@ -33,18 +36,18 @@ To use the application, simply launch it from the Start menu or desktop shortcut
 
 ## Development
 
-The application is built using the following technologies:
+The application is built using:
 
-- JavaScript
-- npm
-- TypeScript
-- React
+* [Electron](https://www.electronjs.org/)
+* [React](https://reactjs.org/)
+* [Vite](https://vitejs.dev/)
+* [TypeScript](https://www.typescriptlang.org/)
 
 To build the application from source, you will need to have Node.js and npm installed on your computer. Once you have installed Node.js and npm, you can download the source code for the application from the [GitHub repository](https://github.com/SnekCode/TheIsleManager) and run the following commands:
 
 ```
 npm install
-npm start
+npm run dev
 ```
 
 This will start the application in development mode and allow you to make changes to the code.
