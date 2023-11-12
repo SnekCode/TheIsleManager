@@ -4,7 +4,7 @@ import packagejson from '~/package.json'
 import log from 'electron-log/main';
 
 log.initialize({ preload: true });
-log.info('App Start');
+console.log = log.log;
 
 
 // handle update

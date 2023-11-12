@@ -24,7 +24,7 @@
       "provider": "github",
       "owner": "SnekCode",
       "repo": "TheIsleManager",
-      "releaseType": "draft",
+      "releaseType": "release",
       "publishAutoUpdate": true
     },
     "target": [

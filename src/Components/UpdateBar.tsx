@@ -1,7 +1,7 @@
 import { useApiReceiveEffect, useApiSend } from "@/Hooks/useApi";
 import { ProgressInfo } from "electron-updater";
 import React, { useEffect } from "react";
-import { EChannels } from "~/Shared/channels";
+import { EChannels, channelLog } from "~/Shared/channels";
 import "./UpdateBar.scss"
 
 const animationTriggerEffect = (trigger: boolean, callback: () => void) => {
@@ -38,18 +38,21 @@ const UpdateBar = () => {
   
 
   useApiReceiveEffect(EChannels.updateAvailable, (show: boolean) => {
+    channelLog(EChannels.updateAvailable, "receiving", show);
     setShowUpdateBar(show);
   });
-  useApiReceiveEffect(EChannels.updateDownloaded, () => {
-    setDownLoaded(true);
+  useApiReceiveEffect(EChannels.updateDownloaded, (bool: boolean) => {
+    channelLog(EChannels.updateDownloaded, "receiving", bool);
+    setDownLoaded(bool);
   });
   useApiReceiveEffect(EChannels.updateInfo, (version: string) => {
+    channelLog(EChannels.updateInfo, "receiving", version);
     setUpdateMessage(`Update to version ${version} available!`);
-    setShowUpdateBar(true);
   });
   useApiReceiveEffect(
     EChannels.updateDownloadProgress,
     (progress: ProgressInfo) => {
+      channelLog(EChannels.updateDownloadProgress, "receiving", progress);
       setDownloadProgress(progress);
       if (progress.percent === 100) {
         setTimeout(() => {
