@@ -7,16 +7,14 @@ log.initialize({ preload: true });
 log.info('App Start');
 
 // handle update
-import { autoUpdater } from 'electron-updater'
+const { updateElectronApp } = require('update-electron-app')
+updateElectronApp()
 
 // load main ipc actions
 import './GameManager/ipc/main/actions'
 import './ipc/main/store'
 
 // handle auto update
-autoUpdater.updateConfigPath = path.join('resources/app-update.yml')
-autoUpdater.logger = log
-autoUpdater.checkForUpdatesAndNotify()
 
 // The built directory structure
 //
