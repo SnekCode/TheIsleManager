@@ -31,6 +31,8 @@ export const AppGameProvider: React.FC<ContextType> = ({ children }) => {
 
   useEffect(() => {
     useApiRetrieve("loadedGame", (data) => {
+      console.log("loaded game", data);
+      
       setLoadedGame(data)
       setLoadedStore(true);
     });

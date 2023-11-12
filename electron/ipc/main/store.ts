@@ -1,10 +1,7 @@
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
 
-const store = new Store();
-
-console.log(store.path);
-
+export const store = new Store();
 
 ipcMain.handle('getStore', (_, name) => {
   return store.get(name);

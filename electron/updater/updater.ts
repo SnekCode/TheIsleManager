@@ -8,14 +8,19 @@ autoUpdater.logger = log;
 autoUpdater.autoDownload = false;
 autoUpdater.forceDevUpdateConfig = true;
 
-setTimeout(() => {
+const isDev = process.env.NODE_ENV === "development";
+
+const checkUpdates = () => {
+  if(isDev) {
+    return;
+  }
   autoUpdater.checkForUpdates();
-}, 5000);
+}
+
+setTimeout(() => checkUpdates, 5000);
 
 // check for updates every 1hour
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 3600000);
+setInterval(() => checkUpdates, 3600000);
 
 autoUpdater.on("update-available", (info) => {
   channelLog("update-available", "receiving", info);

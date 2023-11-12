@@ -13,7 +13,8 @@ export enum EChannels {
   updateError = "updateError",
   update = "update",
   updateDownloadProgress = "updateDownloadProgress",
-  updateInfo = "updateInfo"
+  updateInfo = "updateInfo",
+  checkInstall = "checkInstall"
 }
 
 export const channelLog = (channel: string, direction: "sending"| "receiving", ...args: any[]) => {

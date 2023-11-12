@@ -32,12 +32,11 @@ function GameSwitcher() {
   }, [loadedGame]);
 
   useApiReceiveEffect(EChannels.configGame, (data: EGameNames) => {
-    if (data !== game.lowerName) {
-      setLoadedGame(data);
+    //fail case if data returns current loaded game to ui
+    console.log("config game", data);
+    
       setGame(games[data]);
-    } else {
       setLoadedGame(data);
-    }
   });
 
   return (

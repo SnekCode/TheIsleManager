@@ -20,6 +20,27 @@ if (store.get("state") === undefined) {
   store.set("state", "init");
 }
 
+const sendLock = () => {
+  appState.lock = true;
+  channelLog(EChannels.lock, "sending", true);
+  win.webContents.send(EChannels.lock, true);
+}
+
+const sendUnlock = () => {
+  appState.lock = false;
+  channelLog(EChannels.lock, "sending", false);
+  win.webContents.send(EChannels.lock, false);
+}
+
+ipcMain.on(EChannels.checkInstall, (_, arg: EGameNames) => {
+  channelLog(EChannels.checkInstall, "receiving", arg);
+  sendLock()
+  const installed = checksForInstall(arg);
+  sendUnlock()
+  channelLog(EChannels.checkInstall, "sending", installed);
+  win.webContents.send(EChannels.checkInstall, installed);
+})
+
 ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
   channelLog(EChannels.configGame, "receiving", arg);
   if (appState.lock) {
@@ -27,27 +48,14 @@ ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
     win.webContents.send(EChannels.configGame, store.get("loadedGame"));
     return;
   }
-  appState.lock = true;
-  channelLog(EChannels.lock, "sending", true);
-  win.webContents.send(EChannels.lock, true);
-  if (swapVersion(arg)) {
-    appState.lock = false;
+  sendLock()
+  const newVersion = swapVersion(arg);
     setTimeout(() => {
-      channelLog(EChannels.lock, "sending", false);
-      win.webContents.send(EChannels.lock, false);
-      channelLog(EChannels.configGame, "sending", arg);
-      win.webContents.send(EChannels.configGame, arg);
-      store.set("loadedGame", arg);
+      sendUnlock()
+      channelLog(EChannels.configGame, "sending", newVersion);
+      win.webContents.send(EChannels.configGame, newVersion);
+      store.set("loadedGame", newVersion);
     }, 1000);
-  }else{
-    appState.lock = false;
-    channelLog(EChannels.lock, "sending", false);
-    win.webContents.send(EChannels.lock, false);
-    channelLog(EChannels.configGame, "sending", "failed", "failed to swap version");
-    win.webContents.send(EChannels.showMessage, "Failed to swap version.  Please try again Later.");
-    channelLog(EChannels.configGame, "sending", store.get("loadedGame"));
-    win.webContents.send(EChannels.configGame, store.get("loadedGame"));
-  }
 });
 
 ipcMain.on(EChannels.startGame, (_, arg) => {
@@ -55,13 +63,11 @@ ipcMain.on(EChannels.startGame, (_, arg) => {
     return;
   }
   channelLog(EChannels.startGame, "receiving", arg);
-  appState.lock = true;
-  channelLog(EChannels.lock, "sending", true);
+  sendLock()
   win.webContents.send(EChannels.playing, true);
   //start game is async
   startGame(arg).then(() => {
-    appState.lock = false;
-    channelLog(EChannels.lock, "sending", false);
+    sendUnlock()
     win.webContents.send(EChannels.playing, false);
   });
 });
