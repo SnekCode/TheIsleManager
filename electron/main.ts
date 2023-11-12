@@ -1,6 +1,10 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
 import packagejson from '~/package.json'
+import log from 'electron-log/main';
+
+log.initialize({ preload: true });
+log.info('App Start');
 
 // handle update
 import { autoUpdater } from 'electron-updater'
@@ -10,6 +14,8 @@ import './GameManager/ipc/main/actions'
 import './ipc/main/store'
 
 // handle auto update
+autoUpdater.updateConfigPath = path.join('resources/app-update.yml')
+autoUpdater.logger = log
 autoUpdater.checkForUpdatesAndNotify()
 
 // The built directory structure

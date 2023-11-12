@@ -14,13 +14,6 @@
     "dist",
     "dist-electron"
   ],
-  "publish": {
-    "provider": "github",
-    "owner": "SnekCode",
-    "repo": "TheIsleManager",
-    "releaseType": "draft",
-    "publishAutoUpdate": true
-  },
   "mac": {
     "target": [
       "dmg"
@@ -28,6 +21,13 @@
     "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
   },
   "win": {
+    "publish": {
+      "provider": "github",
+      "owner": "SnekCode",
+      "repo": "TheIsleManager",
+      "releaseType": "draft",
+      "publishAutoUpdate": true
+    },
     "target": [
       {
         "target": "nsis",
