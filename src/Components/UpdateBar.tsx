@@ -26,14 +26,18 @@ const UpdateBar = () => {
     delta: 0,
   });
   const [showUpdateBar, setShowUpdateBar] = React.useState(false);
-  const [hide, setHide] = React.useState({trigger: false, hide: true});
+  const [hide, setHide] = React.useState({trigger: false, hide: false});
 
   animationTriggerEffect(hide.trigger, () => {
+    if(!hide.hide) {
     setHide({trigger: true, hide: true});
+    }
   });
 
   animationTriggerEffect(hide.hide, () => {
+    if(hide.trigger) {
     setShowUpdateBar(false);
+    }
   })
   
 
@@ -63,8 +67,12 @@ const UpdateBar = () => {
   );
 
   return (
-    <div className={`${hide.trigger ? 'hide' : ""} ${showUpdateBar ? "show": ""} update-bar`}>
+    <div className={`${!showUpdateBar ? 'hide' : ""} update-bar`}>
+      {!downLoaded && (
+        <>
       <div className="update-bar-message">{updateMessage}</div>
+        </>
+      )}
       {!updateQueued && (
         <div className="update-bar-button-container">
           <button

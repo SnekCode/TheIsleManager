@@ -36,7 +36,6 @@
       }
     ],
     "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
-    "publisherName": "SnekCode"
   },
   "nsis": {
     "oneClick": false,

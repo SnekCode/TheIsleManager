@@ -47,9 +47,7 @@ ipcMain.on(EChannels.update, (_, installNow: boolean) => {
   autoUpdater.downloadUpdate().then(() => {
     if (installNow) {
       console.log("installing update now");
-      autoUpdater.autoInstallOnAppQuit = false;
-      autoUpdater.autoRunAppAfterInstall = true;
-      autoUpdater.quitAndInstall();
+      autoUpdater.quitAndInstall(true, true);
     } else {
       console.log("installing update on quit");
       autoUpdater.autoInstallOnAppQuit = true;
