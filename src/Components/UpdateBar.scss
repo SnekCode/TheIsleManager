@@ -1,0 +1,65 @@
+@import "../Styles/common.scss";
+
+.update-bar {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  background-color: $bgColorTrans ;
+  width: 100%;
+  padding-top: .4rem;
+  padding-bottom: .4rem;
+  transition: all 0.3s ease-in-out;
+  top:-11%;
+
+  &.hide {
+    transform: translateY(-100%);
+  }
+  &.show {
+    transform: translateY(100%);
+  }
+}
+
+.update-bar-button-container{
+  margin-right: .4rem;
+}
+
+.update-bar-progress{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.update-bar-progress-bar{
+  height: 100%;
+  width: 100%;
+  background-color: #000000;
+  border-radius: 8px;
+}
+.update-bar-progress-bar-fill{
+  background-color: #646cff;
+  height: 100%;
+  width: 0%;
+  transition: all 0.3s ease-in-out;
+}
+
+.update-bar-progress-bar-text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: .9rem;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 0.5s ease-in-out;
+  &.hide {
+    transform: translateY(100%);
+  }
+}

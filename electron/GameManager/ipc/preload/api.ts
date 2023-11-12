@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld(
     clearListeners: (channel: string) => {
       ipcRenderer.removeAllListeners(channel);
     },
+    invoke: (channel: string, data: any, func: Function) => {
+      return ipcRenderer.invoke(channel, data).then((result) => func(result));
+    },
     retrieveFromStore: (name: string, func: Function) => {
       ipcRenderer.invoke("getStore", name).then((result) => func(result));
     },

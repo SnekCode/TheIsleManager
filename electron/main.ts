@@ -6,9 +6,9 @@ import log from 'electron-log/main';
 log.initialize({ preload: true });
 log.info('App Start');
 
+
 // handle update
-const { updateElectronApp } = require('update-electron-app')
-updateElectronApp()
+import './updater/updater'
 
 // load main ipc actions
 import './GameManager/ipc/main/actions'

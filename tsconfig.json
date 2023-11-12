@@ -33,6 +33,9 @@
       "Providers/*": ["src/Providers/*"],
       "Shared/*": ["Shared/*"],
       "Electron/*": ["electron/*"],
+      "Hooks/*": ["src/Hooks/*"],
+      "Pages/*": ["src/Pages/*"],
+      "assets/*": ["src/assets/*"],
     }
   },
   "include": ["src", "electron", "Shared"],

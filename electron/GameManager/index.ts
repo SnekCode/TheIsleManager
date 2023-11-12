@@ -60,10 +60,7 @@ let maxAttempts = 10;
 
 export function checkInAppData(name: EGameNames){
     const game = config[name];
-    console.log('checkInAppData', name);
-
     if(fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
-      console.log('already checked in');
       return;
     }
     try{
@@ -84,7 +81,6 @@ export function checkInAppData(name: EGameNames){
 export function checkOutAppData(name: TGameNames){
     const game = config[name];
     if(!fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
-      console.log('already checked out');
       return;
     }
     try{

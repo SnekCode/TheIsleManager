@@ -6,7 +6,6 @@
   "appId": "io.github.theislemanager",
   "asar": true,
   "productName": "TheIsleManager",
-  "forceCodeSigning": true,
   "directories": {
     "output": "release/${version}"
   },

@@ -28,6 +28,7 @@ interface Window {
     send: (channel: string, data: any) => void
     receive: (channel: string, func: Function) => void
     clearListeners: (channel: string) => void
+    invoke: (channel: string, data: any, func: Function) => void
     retrieveFromStore: (name: string, func: Function) => void
     saveToStore: (name: string, data: any) => void
   }

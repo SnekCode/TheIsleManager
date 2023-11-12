@@ -9,6 +9,7 @@ interface IAppLockContext extends ContextType {
   lock: boolean;
   loadedGame: EGameNames
   playing: boolean;
+  loadedStore: boolean;
   setLock: (lock: boolean) => void;
   setLoadedGame: (game: EGameNames) => void;
 }
@@ -17,6 +18,7 @@ export const AppGameContext = React.createContext<IAppLockContext>({
   lock: false,
   loadedGame: EGameNames.legacy,
   playing: false,
+  loadedStore: false,
   setLock: (_) => null,
   setLoadedGame: (_:EGameNames) => null,
 });
@@ -28,21 +30,23 @@ export const AppGameProvider: React.FC<ContextType> = ({ children }) => {
   const [loadedStore, setLoadedStore] = useState(false);
 
   useEffect(() => {
-    useApiRetrieve("loadedGame", setLoadedGame);
-    setLoadedStore(true);
+    useApiRetrieve("loadedGame", (data) => {
+      setLoadedGame(data)
+      setLoadedStore(true);
+    });
   },[])
 
 
   useApiReceiveEffect("lock", setLock);
   useApiReceiveEffect("playing", setPlaying)
 
-  if (!loadedStore && loadedGame === undefined) {
+  if (!loadedStore) {
     return null;
   }
 
 
   return (
-    <AppGameContext.Provider value={{ lock, setLock, loadedGame, setLoadedGame, playing }}>
+    <AppGameContext.Provider value={{ lock, setLock, loadedGame, setLoadedGame, playing, loadedStore }}>
       {children}
     </AppGameContext.Provider>
   );

@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-
 import { getWin, win } from "Electron/main";
 import Store from "electron-store";
 import {
@@ -8,7 +7,7 @@ import {
   setUpLegacy,
   swapVersion,
 } from "../../../GameManager/index";
-import { EChannels } from "Shared/channels";
+import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
 
 const store = new Store();
@@ -22,24 +21,31 @@ if (store.get("state") === undefined) {
 }
 
 ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
+  channelLog(EChannels.configGame, "receiving", arg);
   if (appState.lock) {
+    channelLog(EChannels.configGame, "sending", "failed", "app locked");
     win.webContents.send(EChannels.configGame, store.get("loadedGame"));
     return;
   }
-  console.log(EChannels.configGame, arg);
   appState.lock = true;
+  channelLog(EChannels.lock, "sending", true);
   win.webContents.send(EChannels.lock, true);
   if (swapVersion(arg)) {
     appState.lock = false;
     setTimeout(() => {
+      channelLog(EChannels.lock, "sending", false);
       win.webContents.send(EChannels.lock, false);
+      channelLog(EChannels.configGame, "sending", arg);
       win.webContents.send(EChannels.configGame, arg);
       store.set("loadedGame", arg);
     }, 1000);
   }else{
     appState.lock = false;
+    channelLog(EChannels.lock, "sending", false);
     win.webContents.send(EChannels.lock, false);
+    channelLog(EChannels.configGame, "sending", "failed", "failed to swap version");
     win.webContents.send(EChannels.showMessage, "Failed to swap version.  Please try again Later.");
+    channelLog(EChannels.configGame, "sending", store.get("loadedGame"));
     win.webContents.send(EChannels.configGame, store.get("loadedGame"));
   }
 });
@@ -48,13 +54,14 @@ ipcMain.on(EChannels.startGame, (_, arg) => {
   if (appState.lock) {
     return;
   }
-  console.log(EChannels.startGame, arg);
-
+  channelLog(EChannels.startGame, "receiving", arg);
   appState.lock = true;
+  channelLog(EChannels.lock, "sending", true);
   win.webContents.send(EChannels.playing, true);
   //start game is async
   startGame(arg).then(() => {
     appState.lock = false;
+    channelLog(EChannels.lock, "sending", false);
     win.webContents.send(EChannels.playing, false);
   });
 });
