@@ -6,7 +6,7 @@ import {
   checksForInstall,
   setUpLegacy,
   swapVersion,
-} from "../../../GameManager/index";
+} from "../index";
 import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
 

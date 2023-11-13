@@ -7,7 +7,7 @@ import { EGameNames } from "~/Shared/gamenames";
 
 interface IAppLockContext extends ContextType {
   lock: boolean;
-  loadedGame: EGameNames
+  loadedGame: EGameNames | "none"
   playing: boolean;
   loadedStore: boolean;
   setLock: (lock: boolean) => void;
@@ -25,7 +25,7 @@ export const AppGameContext = React.createContext<IAppLockContext>({
 
 export const AppGameProvider: React.FC<ContextType> = ({ children }) => {
   const [lock, setLock] = useState(false);
-  const [loadedGame, setLoadedGame] = useState<EGameNames>(EGameNames.legacy);
+  const [loadedGame, setLoadedGame] = useState<EGameNames | "none">(EGameNames.legacy);
   const [playing, setPlaying] = useState(false);
   const [loadedStore, setLoadedStore] = useState(false);
 

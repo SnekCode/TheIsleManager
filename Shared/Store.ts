@@ -2,8 +2,11 @@ import { EGameNames } from "./gamenames";
 
 export interface IStore {
   "state": string,
-  "loadedGame": EGameNames,
+  "loadedGame": EGameNames | "none",
+  "legacyInstall": boolean,
+  "evrimaInstall": boolean,
+  "legacyAppData": boolean,
+  "evrimaAppData": boolean
 }
 
-// dynamic enum of IStore keys
-export type TStoreKeys = keyof IStore;
+export type IStoreKeys = keyof IStore;

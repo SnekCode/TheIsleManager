@@ -8,6 +8,12 @@ import { EChannels } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
 
 const games = {
+  none: {
+    name: "None",
+    lowerName: "none",
+    bg: evrimaBg,
+    next: EGameNames.evrima,
+  },
   evrima: {
     name: "Evrima",
     lowerName: EGameNames.evrima,

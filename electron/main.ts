@@ -11,10 +11,11 @@ console.log = log.log;
 import './updater/updater'
 
 // load main ipc actions
-import './GameManager/ipc/main/actions'
-import './ipc/main/store'
+import './GameManager/main/actions'
+import './main/store'
 
-// handle auto update
+// handle file config
+import './GameManager/setupConfig'
 
 // The built directory structure
 //

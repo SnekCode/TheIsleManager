@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { TStoreKeys } from "~/Shared/Store";
+import { IStore, IStoreKeys } from "~/Shared/Store";
 import { channelLog } from "~/Shared/channels";
 
 export const useApiReceiveEffect = (
@@ -50,13 +50,13 @@ export const useApiInvoke = (
   });
 };
 
-export const useApiRetrieve = (
-  name: TStoreKeys,
-  callback: (data: any) => void
+export const useApiRetrieve = <K extends IStoreKeys>(
+  name: K,
+  callback: (data: IStore[K]) => void
 ) => {
   channelLog("retrieveFromStore", "sending", name);
 
-  window.api.retrieveFromStore(name, (data: any) => {
+  window.api.retrieveFromStore(name, (data: IStore[K]) => {
     channelLog("retrieveFromStore", "receiving", data);
     callback(data);
   });

@@ -2,9 +2,7 @@ import fs from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
 
-const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
-
-type TGameNames = 'legacy' | 'evrima';
+export const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
 
 export const config = {
     steam: {
@@ -15,14 +13,14 @@ export const config = {
       name: 'TheIsle.exe',
       runtimeAppDataName: 'TheIsle',
       thisStandbyAppDataName: 'TheIsleLegacy',
-      otherStandbyAppDataName: 'TheIsleEvirma',
+      otherStandbyAppDataName: 'TheIsleEvrima',
       installIndicator: 'Engine\\Extras\\Redist\\en-us\\UE4PrereqSetup_x64.exe',
     },
     evrima: {
       path: 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Isle',
       name: 'TheIsle\\Binaries\\Win64\\TheIsleClient-Win64-Shipping.exe',
       runtimeAppDataName: 'TheIsle',
-      thisStandbyAppDataName: 'TheIsleEvirma',
+      thisStandbyAppDataName: 'TheIsleEvrima',
       otherStandbyAppDataName: 'TheIsleLegacy',
       installIndicator: 'EasyAntiCheat',
       isEvrimaAppDataFolderIndicator: 'Saved\\Config\\WindowsClient\\ApexDestruction.ini',
@@ -42,7 +40,7 @@ export function setUpLegacy(){
     // create a shortcut (symlink) named TheIsleLegacy on the OneDrive // desktop
     checkInAppData(EGameNames.legacy);
     return true
-  }else if(checksForInstall('legacy')){
+  }else if(checksForInstall(EGameNames.legacy)){
     if(fs.existsSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`)){
       fs.writeFileSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
     }
@@ -78,7 +76,7 @@ export function checkInAppData(name: EGameNames){
   }
 }
 
-export function checkOutAppData(name: TGameNames){
+export function checkOutAppData(name: EGameNames){
     const game = config[name];
     if(!fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
       return;
@@ -90,8 +88,12 @@ export function checkOutAppData(name: TGameNames){
     }
 }
 
-export function swapVersion(name: TGameNames){
+export function swapVersion(name: EGameNames){
   const currentGame = checkCurrentAppDataFolderType();
+  if(currentGame === "none"){
+    checkInAppData(name);
+    return true;
+  }
 
   if( currentGame === name){
     return true;
@@ -102,16 +104,29 @@ export function swapVersion(name: TGameNames){
   return checkCurrentAppDataFolderType() === name
 }
 
-export function checkCurrentAppDataFolderType(): EGameNames{
-  return fs.existsSync(`${LOCAL_APP_DATA}\\${config.evrima.runtimeAppDataName}\\${config.evrima.isEvrimaAppDataFolderIndicator}`) ? EGameNames.evrima : EGameNames.legacy;
+export function checkCurrentAppDataFolderType(): EGameNames | "none" {
+  if(fs.existsSync(`${LOCAL_APP_DATA}\\${config.evrima.runtimeAppDataName}`)){
+      return fs.existsSync(`${LOCAL_APP_DATA}\\${config.evrima.runtimeAppDataName}\\${config.evrima.isEvrimaAppDataFolderIndicator}`) ? EGameNames.evrima : EGameNames.legacy;
+  }else {
+    return "none";
+  }
 }
 
 
-export function checksForInstall(name: TGameNames){
+export function checksForInstall(name: EGameNames){
   return fs.existsSync(config[name].path) && fs.existsSync(`${config[name].path}\\${config[name].installIndicator}`)
 }
 
-export function startGame(name: TGameNames){
+export function checksForAppData(name: EGameNames){
+  const loadedGame = checkCurrentAppDataFolderType();
+  if(loadedGame === name){
+    return true;
+  }else{
+    return fs.existsSync(`${LOCAL_APP_DATA}\\${config[name].thisStandbyAppDataName}`)
+  }
+}
+
+export function startGame(name: EGameNames){
     const game = config[name];
     const gameExe = `${game.path}\\${game.name}`;
     //check for standbyAppData Folder
