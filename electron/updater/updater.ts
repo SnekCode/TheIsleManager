@@ -1,13 +1,14 @@
 import { ipcMain } from "electron";
 import log from "electron-log/main";
 import { autoUpdater } from "electron-updater";
-import { win } from "Electron/main";
+import { win } from "~/electron/main/main";
 import { channelLog, EChannels } from "~/Shared/channels";
 
 autoUpdater.logger = log;
 autoUpdater.autoDownload = false;
 autoUpdater.forceDevUpdateConfig = true;
 
+if(process.env.VITE_DEV_SERVER_URL === 'development'){
 setTimeout(() => {
   autoUpdater.checkForUpdates();
 }, 5000);
@@ -16,6 +17,8 @@ setTimeout(() => {
 setInterval(() => {
   autoUpdater.checkForUpdates();
 }, 3600000);
+
+}
 
 autoUpdater.on("update-available", (info) => {
   channelLog("update-available", "receiving", info);

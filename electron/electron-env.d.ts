@@ -16,8 +16,10 @@ declare namespace NodeJS {
      * ```
      */
     DIST: string
+    DIST_ELECTRON: string
     /** /dist/ or /public/ */
     VITE_PUBLIC: string
+    VSCODE_DEBUG?: true
   }
 }
 

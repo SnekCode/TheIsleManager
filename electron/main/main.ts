@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron'
 import path from 'node:path'
-import packagejson from '~/package.json'
+import pkg from '~/package.json'
 import log from 'electron-log/main';
 
 log.initialize({ preload: true });
@@ -8,14 +8,14 @@ console.log = log.log;
 
 
 // handle update
-import './updater/updater'
+import '../updater/updater'
 
 // load main ipc actions
-import './GameManager/main/actions'
-import './main/store'
+import '../GameManager/main/actions'
+import './store'
 
 // handle file config
-import './GameManager/setupConfig'
+import '../GameManager/setupConfig'
 
 // The built directory structure
 //
@@ -26,37 +26,48 @@ import './GameManager/setupConfig'
 // │ │ ├── main.js
 // │ │ └── preload.js
 // │
-process.env.DIST = path.join(__dirname, '../dist')
-process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
+const electronDist = path.join(__dirname, '../')
+const dist = path.join(electronDist, '../dist')
+const url = process.env.VITE_DEV_SERVER_URL
+const vitePublic = url ? path.join(electronDist, '../public') : dist
+const indexHtml = path.join(dist, 'index.html')
+
+// set up env based on const above
+process.env.ELECTRON_DIST = electronDist
+process.env.DIST = dist
+process.env.VITE_PUBLIC = vitePublic
+process.env.VITE_DEV_SERVER_URL = url
+
+// process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 export let win: BrowserWindow
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
-const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+// const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+const preload = path.join(__dirname, '../preload/preload.js')
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(vitePublic, 'electron-vite.svg'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload
     },
     // set title
-    title: `The Isle Manager ${packagejson.version}`,
+    title: `The Isle Manager ${pkg.version}`,
   })
-  // if dev mode with vite
-  if(import.meta.env.DEV){
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
   })
 
-  if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL)
+  if (url) {
+    console.log('loadURL', url);
+    
+    win.loadURL(url)
+    win.webContents.openDevTools({ mode: 'detach' });
   } else {
     // win.loadFile('dist/index.html')
-    win.loadFile(path.join(process.env.DIST, 'index.html'))
+    win.loadFile(indexHtml)
   }
 }
 

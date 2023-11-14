@@ -4,7 +4,7 @@
   "version": "1.0.6",
   "author": "SnekCode",
   "license": "ISC",
-  "main": "dist-electron/main.js",
+  "main": "dist-electron/main/main.js",
   "repository": "https://github.com/SnekCode/TheIsleManager",
   "debug": {
     "env": {
