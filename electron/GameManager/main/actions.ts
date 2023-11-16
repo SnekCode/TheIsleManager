@@ -66,7 +66,7 @@ ipcMain.on(EChannels.startGame, (_, arg) => {
   });
 });
 
-ipcMain.on("setupLegacy", (_, __) => {
+ipcMain.on("setupLegacy", () => {
   if (appState.lock || win === null) {
     return;
   }
@@ -103,7 +103,7 @@ function checkForEvrima() {
   }
 }
 
-ipcMain.on("checkEvrima", (_, __) => {
+ipcMain.on("checkEvrima", () => {
   if (appState.lock || win === null) {
     return;
   }
@@ -118,7 +118,7 @@ ipcMain.on("checkEvrima", (_, __) => {
   }
 });
 
-ipcMain.on("stopCheckEvrima", (_, __) => {
+ipcMain.on("stopCheckEvrima", () => {
   if (installCheck !== null) {
     clearInterval(installCheck);
   }

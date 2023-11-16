@@ -38,7 +38,7 @@
       "assets/*": ["src/assets/*"],
     }
   },
-  "include": ["src", "electron", "Shared"],
+  "include": ["src", "electron", "Shared", "package.json"],
   "references": [{ "path": "./tsconfig.node.json" }],
 
   /* For ts-node */

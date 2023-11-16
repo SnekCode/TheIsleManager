@@ -1,7 +1,7 @@
 // provider that provides the app lock state and methods to lock/unlock the app
 
 import ContextType from "@/Data/Interfaces/ContextType";
-import { useApiReceiveEffect, useApiRetrieve } from "@/Hooks/useApi";
+import { useApiReceiveEffect, apiRetrieve } from "@/Hooks/useApi";
 import React, { useEffect, useState } from "react";
 import { EGameNames } from "~/Shared/gamenames";
 
@@ -19,8 +19,8 @@ export const AppGameContext = React.createContext<IAppLockContext>({
   loadedGame: EGameNames.legacy,
   playing: false,
   loadedStore: false,
-  setLock: (_) => null,
-  setLoadedGame: (_:EGameNames) => null,
+  setLock: () => null,
+  setLoadedGame: () => null,
 });
 
 export const AppGameProvider: React.FC<ContextType> = ({ children }) => {
@@ -30,7 +30,7 @@ export const AppGameProvider: React.FC<ContextType> = ({ children }) => {
   const [loadedStore, setLoadedStore] = useState(false);
 
   useEffect(() => {
-    useApiRetrieve("loadedGame", (data) => {
+    apiRetrieve("loadedGame", (data) => {
       setLoadedGame(data)
       setLoadedStore(true);
     });

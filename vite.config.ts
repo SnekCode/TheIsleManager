@@ -23,12 +23,6 @@ export default defineConfig(({ command }) => {
   const isBuild = command === "build";
   const sourcemap = isServe || !!process.env.VSCODE_DEBUG;
 
-  const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
-  console.log("url", url);
-  console.log(url.host);
-  console.log(url.port);
-  
-  
   return {
     plugins: [
       react(),

@@ -1,17 +1,17 @@
-import { useApiReceiveEffect, useApiSend } from "@/Hooks/useApi";
+import { useApiReceiveEffect, apiSend } from "@/Hooks/useApi";
 import { ProgressInfo } from "electron-updater";
 import React, { useEffect } from "react";
 import { EChannels, channelLog } from "~/Shared/channels";
 import "./UpdateBar.scss"
 
-const animationTriggerEffect = (trigger: boolean, callback: () => void) => {
+const useAnimationTriggerEffect = (trigger: boolean, callback: () => void) => {
   useEffect(() => {
     if (trigger) {
       setTimeout(() => {
         callback();
       }, 500);
     }
-  }, [trigger]);
+  }, [trigger, callback]);
 }
 
 const UpdateBar = () => {
@@ -28,13 +28,13 @@ const UpdateBar = () => {
   const [showUpdateBar, setShowUpdateBar] = React.useState(false);
   const [hide, setHide] = React.useState({trigger: false, hide: false});
 
-  animationTriggerEffect(hide.trigger, () => {
+  useAnimationTriggerEffect(hide.trigger, () => {
     if(!hide.hide) {
     setHide({trigger: true, hide: true});
     }
   });
 
-  animationTriggerEffect(hide.hide, () => {
+  useAnimationTriggerEffect(hide.hide, () => {
     if(hide.trigger) {
     setShowUpdateBar(false);
     }
@@ -58,7 +58,7 @@ const UpdateBar = () => {
     (progress: ProgressInfo) => {
       channelLog(EChannels.updateDownloadProgress, "receiving", progress);
       setDownloadProgress(progress);
-      if (progress.percent === 100) {
+      if (progress.percent > 99.9) {
         setTimeout(() => {
           setShowUpdateBar(false);
         }, 30000);
@@ -77,7 +77,7 @@ const UpdateBar = () => {
         <div className="update-bar-button-container">
           <button
             onClick={() => {
-              useApiSend(EChannels.update, true);
+              apiSend(EChannels.update, true);
               setUpdateQueued(true);
             }}
             className="update-bar-button"
@@ -86,7 +86,7 @@ const UpdateBar = () => {
           </button>
           <button
             onClick={() => {
-              useApiSend(EChannels.update, false);
+              apiSend(EChannels.update, false);
               setUpdateQueued(true);
             }}
             className="update-bar-button"
@@ -104,7 +104,7 @@ const UpdateBar = () => {
             ></div>
 
             <div className="update-bar-progress-bar-text">
-              {downloadProgress.percent}%
+              {downloadProgress.percent < 100 ? downloadProgress.percent.toPrecision(2): 100 }%
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
 
@@ -54,7 +54,7 @@ export function setUpLegacy(){
 }
 
 let attempts = 0;
-let maxAttempts = 10;
+const maxAttempts = 10;
 
 export function checkInAppData(name: EGameNames){
     const game = config[name];
@@ -63,6 +63,7 @@ export function checkInAppData(name: EGameNames){
     }
     try{
       fs.renameSync(`${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`, `${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }catch(e: any){
       if(e.code === 'EPERM' && attempts < maxAttempts){
         console.log('waiting for access', attempts);
@@ -91,7 +92,7 @@ export function checkOutAppData(name: EGameNames){
 export function swapVersion(name: EGameNames){
   const currentGame = checkCurrentAppDataFolderType();
   if(currentGame === "none"){
-    checkInAppData(name);
+    checkOutAppData(name);
     return [true, name];
   }
 

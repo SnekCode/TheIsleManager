@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 import { IStore, IStoreKeys } from "~/Shared/Store";
 import { channelLog } from "~/Shared/channels";
@@ -16,7 +17,7 @@ export const useApiReceiveEffect = (
       console.log(`Clean ${channel} listeners`)
       window.api.clearListeners(channel);
     };
-  }, []);
+  }, [channel, callback]);
 };
 
 export const useApiSendEffect = (channel: string, data: any) => {
@@ -28,10 +29,10 @@ export const useApiSendEffect = (channel: string, data: any) => {
       console.log(`Clean ${channel} listeners`)
       window.api.clearListeners(channel);
     };
-  }, [data]);
+  }, [data, channel]);
 };
 
-export const useApiSend = (channel: string, data: any) => {
+export const apiSend = (channel: string, data: any) => {
   channelLog(channel, "sending", data);
   window.api.send(channel, data);
 };
@@ -50,7 +51,7 @@ export const useApiInvoke = (
   });
 };
 
-export const useApiRetrieve = <K extends IStoreKeys>(
+export const apiRetrieve = <K extends IStoreKeys>(
   name: K,
   callback: (data: IStore[K]) => void
 ) => {
