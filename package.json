@@ -4,7 +4,7 @@
   "version": "1.0.6",
   "author": "SnekCode",
   "license": "ISC",
-  "main": "dist-electron/main.js",
+  "main": "dist-electron/main/main.js",
   "repository": "https://github.com/SnekCode/TheIsleManager",
   "debug": {
     "env": {
@@ -13,7 +13,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:updater": "set VITE_UPDATER=true && vite",
     "build": "tsc && vite build && electron-builder --publish never",
+    "start": "electron .",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "publish": "tsc && vite build && electron-builder --publish always"

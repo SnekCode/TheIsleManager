@@ -20,13 +20,28 @@
   transition: all 0.3s ease-in-out;
 }
 
+.splashClickArea {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: 99.7%;
+  height: 45%;
+  background-color: transparent;
+  cursor: pointer;
+  border: $actionItemBorder;
+
+  &:hover {
+    border: $actionItemBorderHover;
+    color: $actionItemColorHover;
+  }
+}
+
 // loading spinner
 
 
 .selectGame {
   margin-left: 2rem;
   margin-top: 4rem;
-  text-align: center;
   user-select: none;
   cursor: pointer;
   align-self: flex-start;
@@ -49,12 +64,15 @@
     cursor: pointer;
     opacity: 1;
     background-blend-mode: saturation 1;
-
-    &:hover {
-      // scale up but to the right
-      transform: translateX(1rem) scale(1.1);
-    }
   }
+}
+
+.errorMessage {
+  margin-top: 2rem;
+  color: firebrick;
+  font-size: 1rem;
+  text-align: center;
+  user-select: none;
 }
 
 .playButtonContainer {
@@ -76,6 +94,7 @@
 .playButton {
   width: fit-content;
   align-self: center;
+  border: $actionItemBorder;
 
   &.playing {
     display: none;
@@ -95,5 +114,10 @@
     cursor: pointer;
     opacity: 1;
     background-blend-mode: saturation 1;
+
+    &:hover {
+      // scale up but to the right
+      transform: scale(1.1);
+    }
   }
 }

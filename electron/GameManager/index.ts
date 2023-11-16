@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
 
@@ -54,7 +54,7 @@ export function setUpLegacy(){
 }
 
 let attempts = 0;
-let maxAttempts = 10;
+const maxAttempts = 10;
 
 export function checkInAppData(name: EGameNames){
     const game = config[name];
@@ -63,6 +63,7 @@ export function checkInAppData(name: EGameNames){
     }
     try{
       fs.renameSync(`${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`, `${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }catch(e: any){
       if(e.code === 'EPERM' && attempts < maxAttempts){
         console.log('waiting for access', attempts);
@@ -71,7 +72,7 @@ export function checkInAppData(name: EGameNames){
           checkInAppData(name);
         }, 1000);
     }else {
-      return;
+      console.log("something went wrong checking in");
     }
   }
 }
@@ -83,25 +84,26 @@ export function checkOutAppData(name: EGameNames){
     }
     try{
     fs.renameSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`, `${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`);
-    }catch(e){
-
+    }catch{
+      console.log("something went wrong checking out");
     }
 }
 
 export function swapVersion(name: EGameNames){
   const currentGame = checkCurrentAppDataFolderType();
   if(currentGame === "none"){
-    checkInAppData(name);
-    return true;
+    checkOutAppData(name);
+    return [true, name];
   }
 
   if( currentGame === name){
-    return true;
+    return [true, name];
   }else{
     checkInAppData(currentGame)
     checkOutAppData(name);
   }
-  return checkCurrentAppDataFolderType() === name
+  const verifiedName = checkCurrentAppDataFolderType()
+  return [verifiedName === name, verifiedName];
 }
 
 export function checkCurrentAppDataFolderType(): EGameNames | "none" {

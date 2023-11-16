@@ -4,12 +4,14 @@
   position: absolute;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: $bgColorTrans ;
   width: 100%;
   padding-top: .4rem;
   padding-bottom: .4rem;
   transition: all 0.3s ease-in-out;
   top:0;
+  z-index: 1000;
 
   &.hide {
     transform: translateY(-100%);
@@ -20,6 +22,17 @@
   margin-right: .4rem;
 }
 
+.update-bar-button{
+  cursor: pointer;
+  transition: all 0.5s ease-in-out;
+  border: $actionItemBorder;
+  margin-right: 10px;
+  
+  &:hover {
+    border: $actionItemBorderHover
+  }
+}
+
 .update-bar-progress{
   position: absolute;
   height: 100%;
@@ -28,6 +41,17 @@
   overflow: hidden;
   transition: all 0.3s ease-in-out;
 }
+
+.update-bar-message{
+  height: 100%;
+  color: #ffffff;
+  font-family: inherit;
+  text-align: center;
+  user-select: none;
+  margin-left: 1rem; 
+  transition: all 0.5s ease-in-out;
+}
+
 
 .update-bar-progress-bar{
   height: 100%;

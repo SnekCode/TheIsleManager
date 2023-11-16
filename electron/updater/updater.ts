@@ -1,13 +1,14 @@
 import { ipcMain } from "electron";
 import log from "electron-log/main";
 import { autoUpdater } from "electron-updater";
-import { win } from "Electron/main";
+import { win } from "~/electron/main/main";
 import { channelLog, EChannels } from "~/Shared/channels";
 
 autoUpdater.logger = log;
 autoUpdater.autoDownload = false;
 autoUpdater.forceDevUpdateConfig = true;
 
+if(!import.meta.env.DEV){
 setTimeout(() => {
   autoUpdater.checkForUpdates();
 }, 5000);
@@ -16,9 +17,17 @@ setTimeout(() => {
 setInterval(() => {
   autoUpdater.checkForUpdates();
 }, 3600000);
+}
+
+
+if(process.env.VITE_UPDATER){
+  autoUpdater.allowPrerelease = true;
+  autoUpdater.allowDowngrade = true;
+  autoUpdater.checkForUpdates();
+}
 
 autoUpdater.on("update-available", (info) => {
-  channelLog("update-available", "receiving", info);
+  channelLog("update-available", "receiving", info.version);
   win.webContents.send(EChannels.updateAvailable, true);
   win.webContents.send(EChannels.updateInfo, info.version);
 });

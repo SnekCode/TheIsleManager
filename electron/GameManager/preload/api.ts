@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { withPrototype } from "Electron/preload";
+import { withPrototype } from "~/electron/preload/preload";
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object

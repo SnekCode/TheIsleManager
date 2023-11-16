@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import "./GameManager/preload/api"
+import "../GameManager/preload/api"
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))

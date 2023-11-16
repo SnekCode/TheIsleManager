@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { getWin, win } from "Electron/main";
+import { getWin, win } from "~/electron/main/main";
 import Store from "electron-store";
 import {
   startGame,
@@ -30,23 +30,23 @@ ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
   appState.lock = true;
   channelLog(EChannels.lock, "sending", true);
   win.webContents.send(EChannels.lock, true);
-  if (swapVersion(arg)) {
+  const [success, gameName] = swapVersion(arg);
+  if (success) {
     appState.lock = false;
     setTimeout(() => {
       channelLog(EChannels.lock, "sending", false);
       win.webContents.send(EChannels.lock, false);
-      channelLog(EChannels.configGame, "sending", arg);
-      win.webContents.send(EChannels.configGame, arg);
-      store.set("loadedGame", arg);
+      channelLog(EChannels.configGame, "sending", gameName);
+      win.webContents.send(EChannels.configGame, gameName);
+      store.set("loadedGame", gameName);
     }, 1000);
   }else{
     appState.lock = false;
     channelLog(EChannels.lock, "sending", false);
     win.webContents.send(EChannels.lock, false);
-    channelLog(EChannels.configGame, "sending", "failed", "failed to swap version");
-    win.webContents.send(EChannels.showMessage, "Failed to swap version.  Please try again Later.");
-    channelLog(EChannels.configGame, "sending", store.get("loadedGame"));
-    win.webContents.send(EChannels.configGame, store.get("loadedGame"));
+    channelLog(EChannels.configGame, "sending", "failed", "failed to swap version; current loaded game:", gameName);
+    channelLog(EChannels.configGame, "sending", gameName);
+    win.webContents.send(EChannels.configGame, gameName);
   }
 });
 
@@ -66,7 +66,7 @@ ipcMain.on(EChannels.startGame, (_, arg) => {
   });
 });
 
-ipcMain.on("setupLegacy", (_, __) => {
+ipcMain.on("setupLegacy", () => {
   if (appState.lock || win === null) {
     return;
   }
@@ -103,7 +103,7 @@ function checkForEvrima() {
   }
 }
 
-ipcMain.on("checkEvrima", (_, __) => {
+ipcMain.on("checkEvrima", () => {
   if (appState.lock || win === null) {
     return;
   }
@@ -118,7 +118,7 @@ ipcMain.on("checkEvrima", (_, __) => {
   }
 });
 
-ipcMain.on("stopCheckEvrima", (_, __) => {
+ipcMain.on("stopCheckEvrima", () => {
   if (installCheck !== null) {
     clearInterval(installCheck);
   }
