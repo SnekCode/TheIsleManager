@@ -88,6 +88,16 @@ if (
   store.store.loadedGame = EGameNames.legacy;
 }
 
+if (
+  store.store.loadedGame === "none" &&
+  store.store.evrimaInstall &&
+  store.store.evrimaAppData
+) {
+  checkOutAppData(EGameNames.legacy);
+  store.set("loadedGame", EGameNames.legacy);
+  store.store.loadedGame = EGameNames.legacy;
+}
+
 // check for spelling mistakes for evrima spelled: evirma
 if (
   LOCAL_APP_DATA &&
