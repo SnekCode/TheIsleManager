@@ -23,7 +23,7 @@ export const config = {
       thisStandbyAppDataName: 'TheIsleEvrima',
       otherStandbyAppDataName: 'TheIsleLegacy',
       installIndicator: 'EasyAntiCheat',
-      isEvrimaAppDataFolderIndicator: 'Saved\\Config\\WindowsClient\\ApexDestruction.ini',
+      isEvrimaAppDataFolderIndicator: 'Saved\\Config\\Windows\\ApexDestruction.ini',
     }
 }
 
