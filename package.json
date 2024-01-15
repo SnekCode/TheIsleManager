@@ -1,7 +1,7 @@
 {
   "name": "theislemanager",
   "description": "A Dino Game Manager for The Isle",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "SnekCode",
   "license": "ISC",
   "main": "dist-electron/main/main.js",
