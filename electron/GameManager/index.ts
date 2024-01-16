@@ -1,7 +1,6 @@
 import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
-import {channelLog} from '~/Shared/channels';
 
 export const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
 

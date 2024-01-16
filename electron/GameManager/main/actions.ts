@@ -6,13 +6,9 @@ import {
   checksForInstall,
   setUpLegacy,
   swapVersion,
-  config,
 } from "../index";
 import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
-
-import { execFile } from 'child_process';
-
 
 const store = new Store();
 const appState = {
