@@ -1,6 +1,7 @@
 import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
+import {channelLog} from '~/Shared/channels';
 
 export const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
 
@@ -128,14 +129,16 @@ export function checksForAppData(name: EGameNames){
   }
 }
 
-export function startGame(name: EGameNames){
+export function startGame(name: EGameNames, args: string[]){
     const game = config[name];
     const gameExe = `${game.path}\\${game.name}`;
     //check for standbyAppData Folder
     swapVersion(name);
     // return a promise after 5 secs for testing
+    console.log("start game");
+    
     return new Promise((resolve) => {
-      execFile(gameExe, ()=> {
+      execFile(gameExe, args, ()=> {        
         setTimeout(() => {
           resolve('game ended');
         }, 5000);

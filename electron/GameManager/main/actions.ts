@@ -6,9 +6,13 @@ import {
   checksForInstall,
   setUpLegacy,
   swapVersion,
+  config,
 } from "../index";
 import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
+
+import { execFile } from 'child_process';
+
 
 const store = new Store();
 const appState = {
@@ -50,16 +54,21 @@ ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
   }
 });
 
-ipcMain.on(EChannels.startGame, (_, arg) => {
+ipcMain.on(EChannels.startGame, (_, args) => {
   if (appState.lock) {
     return;
   }
-  channelLog(EChannels.startGame, "receiving", arg);
+  console.log(args);
+  const name = args.shift()
+  console.log(args);
+  
+  
+  channelLog(EChannels.startGame, "receiving", args);
   appState.lock = true;
   channelLog(EChannels.lock, "sending", true);
   win.webContents.send(EChannels.playing, true);
   //start game is async
-  startGame(arg).then(() => {
+  startGame(name, args).then(() => {
     appState.lock = false;
     channelLog(EChannels.lock, "sending", false);
     win.webContents.send(EChannels.playing, false);
