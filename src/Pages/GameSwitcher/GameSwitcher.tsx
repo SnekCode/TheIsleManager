@@ -113,7 +113,7 @@ function GameSwitcher() {
           <button
             onClick={() => {
               if (lock) return;
-              window.api.send(EChannels.startGame, [games[loadedGame].lowerName, autoConnect ? `+connect ${gameServer}` : ""]);
+              window.api.send(EChannels.startGame, [games[loadedGame].lowerName, autoConnect ? "+connect" : "", autoConnect ? gameServer : ""]);
             }}
             className={`${lock ? "locked" : "unlocked"} ${
               playing ? "playing" : ""

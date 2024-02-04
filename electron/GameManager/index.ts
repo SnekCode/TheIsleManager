@@ -18,7 +18,7 @@ export const config = {
     },
     evrima: {
       path: 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Isle',
-      name: 'TheIsle\\Binaries\\Win64\\TheIsle-Win64-Shipping.exe',
+      name: 'TheIsle\\Binaries\\Win64\\TheIsleClient-Win64-Shipping.exe',
       runtimeAppDataName: 'TheIsle',
       thisStandbyAppDataName: 'TheIsleEvrima',
       otherStandbyAppDataName: 'TheIsleLegacy',
