@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { withPrototype } from "~/electron/preload/preload";
+import {EChannels, IChannelKeys, IChannelReceive, IChannelSend} from '~/Shared/channels';
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object

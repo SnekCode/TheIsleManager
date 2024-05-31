@@ -39,33 +39,21 @@ const games = {
 };
 
 function GameSwitcher() {
-  const { lock, setLock, setLoadedGame, loadedGame, playing, loadedStore } =
+  const { lock, setLock, loadedGame, playing, loadedStore } =
     useContext(AppGameContext);
-  const [game, setGame] = useState(games[loadedGame]);
+  const [game, setGame] = useState(games[EGameNames.legacy]);
   const [lastGame, setLastGame] = useState(games[loadedGame]);
   const [gameServer, setGameServer] = useState(games[loadedGame].server)
   const [autoConnect, setAutoConnect] = useState(false)
 
 
-  useEffect(() => {
-    setGame(games[loadedGame])
-  }, [loadedGame]);
+  useApiReceiveEffect(EChannels.checkInstall, (data) => {
+    
+  })
 
-  useApiReceiveEffect(EChannels.configGame, (data: EGameNames) => {
-    if (data !== game.lowerName) {
-      setLoadedGame(data);
-      setGame(games[data]);
-      
-    } else {
-      setLoadedGame(data);
-      setGameServer(games[data].server)
-    }
-  });
 
   const handleGameChange = () => {
-            if (lock) return;
             if (game.name === "None") {
-              setLock(true);
               apiSend(EChannels.configGame, lastGame.lowerName);
               return;
             }

@@ -1,6 +1,7 @@
+import {EGameNames} from './gamenames';
+
 export enum EChannels {
   lock = 'lock',
-  configGame = 'configGame',
   startGame = 'startGame',
   setupLegacy = 'setupLegacy',
   test = 'test',
@@ -13,8 +14,23 @@ export enum EChannels {
   updateError = "updateError",
   update = "update",
   updateDownloadProgress = "updateDownloadProgress",
-  updateInfo = "updateInfo"
+  updateInfo = "updateInfo",
+  checkInstall = "checkInstall"
 }
+
+export interface IChannelReceive {
+  checkInstall: {name: EGameNames, isInstalled: boolean}
+}
+
+export interface IChannelSend {
+  checkInstall: (name: EGameNames) => void
+}
+
+export interface IChannels {
+  checkInstall: (name: EGameNames) => {name: EGameNames, isInstalled: boolean}
+}
+
+export type IChannelKeys = keyof IChannels;
 
 export const channelLog = (channel: string, direction: "sending"| "receiving", ...args: any[]) => {
   // formatted log direction on Channel: arg1, arg2, arg3 with color based on direction

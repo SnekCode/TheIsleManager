@@ -1,12 +1,16 @@
 import { EGameNames } from "./gamenames";
 
 export interface IStore {
-  "state": string,
+  "state": "init" | "complete",
   "loadedGame": EGameNames | "none",
   "legacyInstall": boolean,
   "evrimaInstall": boolean,
   "legacyAppData": boolean,
-  "evrimaAppData": boolean
+  "evrimaAppData": boolean,
+  "legacyServers": string[],
+  "evrimaServers": string[],
+  "legacyInstallPath": string,
+  "evrimaInstallPath": string
 }
 
 export type IStoreKeys = keyof IStore;
