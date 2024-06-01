@@ -2,8 +2,6 @@ import { IpcMainInvokeEvent, ipcMain } from 'electron';
 import Store from 'electron-store';
 import { IStore, IStoreKeys, } from '~/Shared/Store';
 
-// export const store = new Store<IStore>();
-
 export const store = new Store<IStore>({
 	beforeEachMigration: (_, context) => {
 		console.log(`[store] migrate from ${context.fromVersion} => ${context.toVersion}`);

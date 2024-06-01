@@ -61,47 +61,6 @@ export function setUpLegacy(){
   }
 }
 
-// let attempts = 0;
-// const maxAttempts = 10;
-
-// export function checkInAppData(name: EGameNames){
-//     const game = config[name];
-//     if(fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
-//       return;
-//     }
-//     try{
-//       fs.renameSync(`${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`, `${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`);
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     }catch(e: any){
-//       if(e.code === 'EPERM' && attempts < maxAttempts){
-//         console.log('waiting for access', attempts);
-//         attempts++;
-//         setTimeout(() => {
-//           checkInAppData(name);
-//         }, 1000);
-//     }else {
-//       console.log("something went wrong checking in");
-//     }
-//   }
-// }
-
-// export function checkOutAppData(name: EGameNames){
-//     const game = config[name];
-//     if(!fs.existsSync(`${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`)){
-//       return;
-//     }
-//     const standByFileName = `${LOCAL_APP_DATA}\\${game.thisStandbyAppDataName}`
-//     const runTimeFileName = `${LOCAL_APP_DATA}\\${game.runtimeAppDataName}`
-//     try{
-
-//       fs.renameSync(standByFileName, runTimeFileName);
-//     }catch (e){
-//       console.log(standByFileName, runTimeFileName, e);
-      
-//       console.log("something went wrong checking out");
-//     }
-// }
-
 function testControlFile(game: EGameNames, name: keyof typeof config.controlFiles){
 
   const controlFile = `${config.path}\\${config.controlFiles[name].path}`
@@ -170,14 +129,6 @@ export function checksForInstall(name: EGameNames){
   return fs.existsSync(config[name].path) && fs.existsSync(`${config[name].path}\\${config[name].installIndicator}`)
 }
 
-// export function checksForAppData(name: EGameNames){
-//   const loadedGame = checkCurrentAppDataFolderType();
-//   if(loadedGame === name){
-//     return true;
-//   }else{
-//     return fs.existsSync(`${LOCAL_APP_DATA}\\${config[name].thisStandbyAppDataName}`)
-//   }
-// }
 
 export function startGame(name: EGameNames, args: string[]){
     const game = config[name];
@@ -190,6 +141,8 @@ export function startGame(name: EGameNames, args: string[]){
     return new Promise((resolve) => {
       execFile(gameExe, args, ()=> {        
         setTimeout(() => {
+          saveControlFile(name, 'settings')
+          console.log("saving game settings");
           resolve('game ended');
         }, 5000);
       });
