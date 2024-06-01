@@ -5,8 +5,6 @@ export interface IStore {
   "loadedGame": EGameNames | "none",
   "legacyInstall": boolean,
   "evrimaInstall": boolean,
-  "legacyAppData": boolean,
-  "evrimaAppData": boolean,
   "legacyServers": string[],
   "evrimaServers": string[],
   "legacyInstallPath": string,

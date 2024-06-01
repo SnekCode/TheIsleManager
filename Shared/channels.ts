@@ -3,6 +3,7 @@ import {EGameNames} from './gamenames';
 export enum EChannels {
   lock = 'lock',
   startGame = 'startGame',
+  configGame = 'configGame',
   setupLegacy = 'setupLegacy',
   test = 'test',
   hideMessage = 'hideMessage',
@@ -15,19 +16,23 @@ export enum EChannels {
   update = "update",
   updateDownloadProgress = "updateDownloadProgress",
   updateInfo = "updateInfo",
-  checkInstall = "checkInstall"
+  checkInstall = "checkInstall",
+  changeInstallPath ="changeInstallPath"
 }
 
 export interface IChannelReceive {
   checkInstall: {name: EGameNames, isInstalled: boolean}
+  changeInstallPath: (name:EGameNames, path: string) => boolean
 }
 
 export interface IChannelSend {
   checkInstall: (name: EGameNames) => void
+  changeInstallPath: (name:EGameNames, path: string) => void
 }
 
 export interface IChannels {
   checkInstall: (name: EGameNames) => {name: EGameNames, isInstalled: boolean}
+  changeInstallPath: (name:EGameNames, path: string) => boolean
 }
 
 export type IChannelKeys = keyof IChannels;

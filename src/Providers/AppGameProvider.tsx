@@ -15,6 +15,7 @@ interface IAppLockContext extends ContextType {
   setLoadedGame: (game: EGameNames) => void;
   configState: "init" | "complete"
   saveConfigState: (value: IStore["state"]) => void
+  bothGamesInstalled: boolean
 }
 
 export const AppGameContext = React.createContext<IAppLockContext>({
@@ -25,7 +26,8 @@ export const AppGameContext = React.createContext<IAppLockContext>({
   setLock: () => null,
   setLoadedGame: () => null,
   configState: "init",
-  saveConfigState: () => null
+  saveConfigState: () => null,
+  bothGamesInstalled: false
 });
 
 export const AppGameProvider: React.FC<ContextType> = ({ children }) => {

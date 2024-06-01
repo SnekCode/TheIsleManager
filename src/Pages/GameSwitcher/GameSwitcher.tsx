@@ -47,11 +47,6 @@ function GameSwitcher() {
   const [autoConnect, setAutoConnect] = useState(false)
 
 
-  useApiReceiveEffect(EChannels.checkInstall, (data) => {
-    
-  })
-
-
   const handleGameChange = () => {
             if (game.name === "None") {
               apiSend(EChannels.configGame, lastGame.lowerName);

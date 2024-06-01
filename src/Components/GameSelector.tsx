@@ -1,6 +1,6 @@
 // react component that asks the user to select where the game (param) is installed using an input then update the store using apiSave
 
-import {apiRetrieve, apiSave, apiSend, useApiReceiveEffect, useApiSendEffect} from '@/Hooks/useApi';
+import {apiRetrieve, apiSave, apiSend, useApiReceiveEffect, useApiSendEffect, useApiInvoke} from '@/Hooks/useApi';
 import {useState} from 'react';
 import {EChannels} from '~/Shared/channels';
 
@@ -14,15 +14,12 @@ const GameSelector: React.FC<{name:"legacy" | "evrima"}> = ({name}) => {
     const [path, setPath] = useState<string>("");
     const [isInstalled, setIsInstalled] = useState(false)
     const storeName = name + "InstallPath" as "legacyInstallPath" | "evrimaInstallPath"
-
-    useApiReceiveEffect(EChannels.checkInstall, (data) =>{
-        setIsInstalled(data.isInstalled)
-        apiSave(storeName, path) 
-    })
+    
 
     function clearPath(){
         setPath("")
         apiSave(storeName, "")
+        setIsInstalled(false)
     }
 
     async function getDir(e:React.ChangeEvent<HTMLInputElement>) {
@@ -31,8 +28,8 @@ const GameSelector: React.FC<{name:"legacy" | "evrima"}> = ({name}) => {
         dirArray = dirArray?.slice(0, dirArray.length - 1)
         const pathName = dirArray?.join("\\") ?? ""
         setPath(pathName)
-
-        apiSend(EChannels.checkInstall, name)
+        // apiSend(EChannels.changeInstallPath, [name, pathName])
+        useApiInvoke(EChannels.changeInstallPath, [name, pathName], setIsInstalled)
       }
 
     if(isInstalled){
@@ -45,7 +42,7 @@ const GameSelector: React.FC<{name:"legacy" | "evrima"}> = ({name}) => {
     }else{
     return (
         <div style={{margin:42}}>
-            <input id={name+"input"} type='file' webkitdirectory="" onChange={getDir}/>
+            <input id={name+"input"} type='file' webkitdirectory="" datatype='.exe' onChange={getDir}/>
             <label style={{display:'block', textTransform:"capitalize"}} htmlFor={name+"input"} >Choose install path for {name}</label>
             {path ? <label htmlFor={name+"input"} style={{color: "red"}}>This is not an Isle game folder</label> : ""}
             {/* <button onClick={handlePathSubmit}>Submit</button> */}

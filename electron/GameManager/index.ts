@@ -2,10 +2,13 @@ import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
 import {app} from 'electron'
+import {store} from '../main/store'
 
 const userData = app.getPath('userData')
 
 export const LOCAL_APP_DATA = process.env.LOCALAPPDATA;
+
+const legacyFolderName = "The Isle - Legacy"
 
 export const config = {
     path: `${LOCAL_APP_DATA}\\TheIsle`,
@@ -23,13 +26,13 @@ export const config = {
       },
     },
     legacy: {
-      path: '',
+      path: store.get('legacyInstallPath'),
       name: 'TheIsle.exe',
       installIndicator: 'Engine\\Extras\\Redist\\en-us\\UE4PrereqSetup_x64.exe'
 
     },
     evrima: {
-      path: '',
+      path: store.get('evrimaInstallPath'),
       name: 'TheIsle\\Binaries\\Win64\\TheIsleClient-Win64-Shipping.exe',
       installIndicator: 'EasyAntiCheat'
     }
@@ -37,28 +40,17 @@ export const config = {
 
 export function setUpLegacy(){
 
-  // confirm legacy is installed as evrima path
-  if(fs.existsSync(config.evrima.path) && fs.existsSync(`${config.evrima.path}\\${config.legacy.installIndicator}`)){
+    if(!config.legacy.path.includes(legacyFolderName)){
+      const dirArr = config.legacy.path.split('\\')
+      dirArr[dirArr.length - 1] = legacyFolderName
+      const newPath = dirArr.join('\\')
 
-    // game starts as legacy in steam we want to rename it so we can install evrima too
-    fs.renameSync(config.evrima.path, config.legacy.path);
-    // create a file to store steam id
-    
-    fs.writeFileSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
-    // create a shortcut (symlink) named TheIsleLegacy on the OneDrive // desktop
-    // checkInAppData(EGameNames.legacy);
-    return true
-  }else if(checksForInstall(EGameNames.legacy)){
-    if(fs.existsSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`)){
-      fs.writeFileSync(`${config.legacy.path}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
+      fs.renameSync(config.legacy.path, newPath);
+      config.legacy.path = newPath
+      store.set('legacyInstallPath', newPath)
+      // create a file to store steam id
+      fs.writeFileSync(`${newPath}\\TheIsle\\Binaries\\Win64\\steam_appid.txt`, '376210')
     }
-    // game is installed as legacy
-    // checkInAppData(EGameNames.legacy);
-    return true
-  }else {
-    // game is not installed as legacy
-    return false
-  }
 }
 
 function testControlFile(game: EGameNames, name: keyof typeof config.controlFiles){
@@ -122,6 +114,11 @@ export function checkCurrentAppDataFolderType(): EGameNames | "none" {
   if(isLegacy && !isEvrima) return EGameNames.legacy
   if(isEvrima && !isLegacy) return EGameNames.evrima
   return "none"
+}
+
+export function updatePath(name:EGameNames, path:string){
+  config[name].path = path
+  return checksForInstall(name)
 }
 
 

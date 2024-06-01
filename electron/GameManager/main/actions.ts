@@ -1,15 +1,15 @@
 import { ipcMain } from "electron";
 import { getWin, win } from "~/electron/main/main";
-import Store from "electron-store";
+import {store} from '../../main/store'
 import {
   startGame,
   checksForInstall,
   setUpLegacy,
+  updatePath
 } from "../index";
 import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
 
-const store = new Store();
 const appState = {
   lock: false,
 };
@@ -60,6 +60,24 @@ ipcMain.on(EChannels.checkInstall, (_, name: EGameNames) => {
   store.set(name+"InstallPath", isInstalled)
   win.webContents.send(EChannels.checkInstall, {name, isInstalled});
 });
+
+ipcMain.handle(EChannels.changeInstallPath, async (_, data)=> {
+  const [game, path] = data
+  console.log("MAIN CHANGEPATH", data)
+  const previousPath = store.get(game+"InstallPath") as string
+  console.log(previousPath, path, game);
+  store.set(game+"InstallPath", path)
+  const isInstalled = updatePath(game, path)
+  console.log(isInstalled);
+  
+  if(!isInstalled){
+  store.set(game + "InstallPath", previousPath)
+  updatePath(game, previousPath)
+  }
+
+  // win.webContents.send(EChannels.changeInstallPath, isInstalled);
+  return isInstalled
+})
 
 ipcMain.on(EChannels.lock, (_, args) => {
   console.log("test", args);
