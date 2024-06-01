@@ -1,40 +1,41 @@
 import { store } from "~/electron/main/store";
 import {
   checkCurrentAppDataFolderType,
-  checkOutAppData,
-  checksForAppData,
   checksForInstall,
-  LOCAL_APP_DATA,
 } from ".";
 import { EGameNames } from "~/Shared/gamenames";
 import fs from "fs";
-import path from "node:path";
+import {app} from 'electron'
 
-// const loadedGame = checkCurrentAppDataFolderType();
-// const legacyInstall = checksForInstall(EGameNames.legacy);
-// const evrimaInstall = checksForInstall(EGameNames.evrima);
-// const legacyAppData = checksForAppData(EGameNames.legacy);
-// const evrimaAppData = checksForAppData(EGameNames.evrima);
+const userData = app.getPath('userData')
 
-// store.set("loadedGame", loadedGame);
-// store.set("legacyInstall", legacyInstall);
-// store.set("evrimaInstall", evrimaInstall);
-// store.set("legacyAppData", legacyAppData);
-// store.set("evrimaAppData", evrimaAppData);
+// Added in Version 1.2.0 to create a folder in userData `AppData\Roaming\theislemanager\GameSettings` to store game config files
+if(!fs.existsSync(`${userData}\\GameSettings`)){
+  fs.mkdirSync(`${userData}\\GameSettings`)
+}
+
+const loadedGame = checkCurrentAppDataFolderType();
+const legacyInstall = checksForInstall(EGameNames.legacy);
+const evrimaInstall = checksForInstall(EGameNames.evrima);
+
+store.set("loadedGame", loadedGame);
+store.set("legacyInstall", legacyInstall);
+store.set("evrimaInstall", evrimaInstall);
 
 // const DEBUG = store.get("DEBUG") ?? false;
 
-// let gameRunning = false;
+if (
+  store.store.loadedGame === "none" &&
+  store.store.legacyInstall
+) {
+  store.set("loadedGame", EGameNames.legacy);
+  store.store.loadedGame = EGameNames.legacy;
+}
 
-// const execCallback = (error: any, stdout: any, stderr: any) => {
-//     if(error && DEBUG){
-//       console.log(error);
-//       }
-//     if(stdout){
-//       console.log(stdout);
-//       setTimeout(() => gameRunning = false, 2000)
-//       }
-//     if(stderr && DEBUG){
-//       console.log(stderr);
-//       }
-//     }
+if (
+  store.store.loadedGame === "none" &&
+  store.store.evrimaInstall
+) {
+  store.set("loadedGame", EGameNames.evrima);
+  store.store.loadedGame = EGameNames.evrima;
+}
