@@ -2,6 +2,7 @@ import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import pkg from "~/package.json";
 import log from "electron-log/main";
+import { createMenu } from './menu';
 
 log.initialize({ preload: true });
 // get a formated date and time as a string for the log file name DD/MM/YYYY HH:MM:SS
@@ -17,10 +18,11 @@ import "../updater/updater";
 
 // load main ipc actions
 import "../GameManager/main/actions";
-import "./store";
+import {store} from "./store";
 
 // handle file config
-import "../GameManager/setupConfig";
+import {setupConfig} from "../GameManager/setupConfig";
+setupConfig()
 
 // The built directory structure
 //
@@ -47,30 +49,74 @@ process.env.VITE_DEV_SERVER_URL = url;
 // process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
 export let win: BrowserWindow;
+const menu = createMenu()
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 // const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 const preload = path.join(__dirname, "../preload/preload.js");
 
 function createWindow() {
+  
+  
+  
+  let windowConfig = {
+    width: 800,
+    height: 600
+  }
+  
+  const bounds = store.get("windowBounds")
+  if(bounds){
+    windowConfig = {
+      ...windowConfig,
+      ...bounds
+    }
+  }
+
+  const windowSettings = store.get('windowSettings')
+  if(windowSettings){
+    windowConfig = {
+      ...windowConfig,
+      ...windowSettings
+    }
+  }
+  
+  
+  
+  
+  // win = new BrowserWindow({
+  //   icon: path.join(vitePublic, "electron-vite.svg"),
+  //   webPreferences: {
+  //     preload,
+  //   },
+  //   // set title
+  //   title: `The Isle Manager ${pkg.version}`,
+  //   maximizable: false,
+  //   center: true,
+  //   resizable: false,
+  //   width: 800,
+  //   height: 600,
+  //   // set min size
+  //   minWidth: 800,
+  //   minHeight: 600,
+  //   // set max size
+  //   maxWidth: 800,
+  //   maxHeight: 600,
+  // });
+
   win = new BrowserWindow({
-    icon: path.join(vitePublic, "electron-vite.svg"),
+    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
-      preload,
+      preload
     },
     // set title
     title: `The Isle Manager ${pkg.version}`,
-    maximizable: false,
-    center: true,
-    resizable: false,
-    width: 800,
-    height: 600,
-    // set min size
-    minWidth: 800,
-    minHeight: 600,
-    // set max size
-    maxWidth: 800,
-    maxHeight: 600,
-  });
+    // this disables resizing the window
+    thickFrame: false,
+    // set window position
+    ...windowConfig
+  })
+
+
+
   // Test active push message to Renderer-process.
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
@@ -88,6 +134,10 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(indexHtml);
   }
+  win.setMenu(menu)
+  win.on("moved", () => {
+    store.set("windowBounds", win.getNormalBounds());
+  })
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

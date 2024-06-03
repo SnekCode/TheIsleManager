@@ -1,16 +1,18 @@
-import { ipcMain } from "electron";
+import { ipcMain, dialog } from "electron";
 import { getWin, win } from "~/electron/main/main";
-import Store from "electron-store";
+import {store} from '../../main/store'
 import {
   startGame,
-  checksForInstall,
   setUpLegacy,
-  swapVersion,
+  updatePath,
+  swapVersion
 } from "../index";
 import { EChannels, channelLog } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
+import {setupConfig} from '../setupConfig';
 
-const store = new Store();
+let defaultPath = `C:\\`
+
 const appState = {
   lock: false,
 };
@@ -32,6 +34,8 @@ ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
   win.webContents.send(EChannels.lock, true);
   const [success, gameName] = swapVersion(arg);
   if (success) {
+    console.log("SUCCESS");
+    
     appState.lock = false;
     setTimeout(() => {
       channelLog(EChannels.lock, "sending", false);
@@ -41,6 +45,8 @@ ipcMain.on(EChannels.configGame, (_, arg: EGameNames) => {
       store.set("loadedGame", gameName);
     }, 1000);
   }else{
+    console.log("FAIL");
+    
     appState.lock = false;
     channelLog(EChannels.lock, "sending", false);
     win.webContents.send(EChannels.lock, false);
@@ -58,7 +64,6 @@ ipcMain.on(EChannels.startGame, (_, args) => {
   const name = args.shift()
   console.log(args);
   
-  
   channelLog(EChannels.startGame, "receiving", args);
   appState.lock = true;
   channelLog(EChannels.lock, "sending", true);
@@ -67,67 +72,65 @@ ipcMain.on(EChannels.startGame, (_, args) => {
   startGame(name, args).then(() => {
     appState.lock = false;
     channelLog(EChannels.lock, "sending", false);
+    store.set(name + "Started", true)
     win.webContents.send(EChannels.playing, false);
   });
 });
 
-ipcMain.on("setupLegacy", () => {
-  if (appState.lock || win === null) {
-    return;
-  }
-  win.webContents.send("hideMessage");
-  console.log("setupLegacy");
-  if (checksForInstall(EGameNames.legacy)) {
-    store.set("legacy", "complete");
-    store.set("state", EGameNames.evrima);
-  } else if (setUpLegacy()) {
-    store.set("state", EGameNames.evrima);
-    store.set("legacy", "complete");
-  } else {
-    win.webContents.send(
-      "showMessage",
-      "Failed to setup legacy. No Install Found.  Please Install Legacy and try again."
-    );
-  }
-  win.webContents.send("init", store.get("state"));
-});
-
-let installCheck: NodeJS.Timeout | null = null;
-
-function checkForEvrima() {
-  if (win === null) {
-    return false;
-  }
-  if (checksForInstall(EGameNames.evrima)) {
-    win.webContents.send("init", "complete");
-    store.set("state", "complete");
-    // setUpEvrima();
-    return true;
-  } else {
-    return false;
-  }
-}
-
-ipcMain.on("checkEvrima", () => {
-  if (appState.lock || win === null) {
-    return;
-  }
-  // check for legacy install
-  if (!checksForInstall(EGameNames.legacy)) {
-    store.set("state", "init");
-    win.webContents.send("init", "init");
-    return;
-  }
-  if (!checkForEvrima()) {
-    installCheck = setInterval(checkForEvrima, 10000);
+ipcMain.on(EChannels.setupLegacy, () => {
+  setUpLegacy()
+  setupConfig()
+  if(store.get('loadedGame')==='none'){
+    store.set('loadedGame', 'legacy')
   }
 });
 
-ipcMain.on("stopCheckEvrima", () => {
-  if (installCheck !== null) {
-    clearInterval(installCheck);
+// ipcMain.on(EChannels.checkInstall, (_, name: EGameNames) => {
+//   const isInstalled = checksForInstall(name)
+//   win.webContents.send(EChannels.checkInstall, {name, isInstalled});
+// });
+
+ipcMain.on(EChannels.unInstallPath, (_, name: EGameNames)=>{
+  console.log("UNINSTALL", name);
+  
+  const altGame = {
+    legacy: EGameNames.evrima,
+    evrima: EGameNames.legacy
   }
-});
+  store.delete(name+"InstallPath" as 'evrimaInstallPath' | 'legacyInstallPath')
+  const isLoadedGame = name === store.get('loadedGame')
+  if(isLoadedGame && store.get(altGame[name]+"Install")){ 
+    store.set('loadedGame', altGame[name])
+    swapVersion(altGame[name])
+    store.delete(`${name}Install`)
+  }
+})
+
+ipcMain.handle(EChannels.changeInstallPath, async (_, data)=> {
+  const path = (await dialog.showOpenDialog({defaultPath, properties: ['openDirectory'] })).filePaths[0]
+  const [game] = data
+  const previousPath = store.get(game+"InstallPath") as string
+  const isInstalled = updatePath(game, path)
+  const storeIsInstalled = game + "Install" as "legacyInstall" | "evrimaInstall"
+  if(!isInstalled){
+  store.set(game + "InstallPath", previousPath ?? "")
+  updatePath(game, previousPath)
+  }else{
+    store.set(game + "InstallPath", path)
+  }
+  
+  store.set(storeIsInstalled, isInstalled)
+
+  //update default path
+  defaultPath = path.split('\\').slice(0, -1).join('\\')
+
+  return [isInstalled, path]
+})
+
+ipcMain.handle(EChannels.openDialog, ()=>{
+ const selection = dialog.showOpenDialog({defaultPath: `C:\\`, properties: ['openDirectory'] })
+ return selection
+})
 
 ipcMain.on(EChannels.lock, (_, args) => {
   console.log("test", args);

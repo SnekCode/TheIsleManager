@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState} from "react";
 import evrimaBg from "assets/EvrimaBackground.png";
 import legacyBg from "assets/LegacyBackground.png";
 import "./styles.scss";
 import { AppGameContext } from "Providers/AppGameProvider";
-import { useApiReceiveEffect, apiSend } from "Hooks/useApi";
+import { apiSend } from "Hooks/useApi";
 import { EChannels } from "Shared/channels";
 import { EGameNames } from "Shared/gamenames";
 
@@ -27,57 +27,58 @@ const games = {
     lowerName: EGameNames.evrima,
     bg: evrimaBg,
     next: EGameNames.legacy,
-    server: "107.155.104.66:14000"
+    server: {"": ""}
   },
   legacy: {
     name: "Legacy",
     lowerName: EGameNames.legacy,
     bg: legacyBg,
     next: EGameNames.evrima,
-    server: "173.208.139.154:14030"
+    server: {"Dry Reef": "173.208.139.154:14030", "test": 'dummy'}
   },
 };
 
 function GameSwitcher() {
-  const { lock, setLock, setLoadedGame, loadedGame, playing, loadedStore } =
+  const { lock, setLock, loadedGame, playing, loadedStore, bothGamesInstalled } =
     useContext(AppGameContext);
   const [game, setGame] = useState(games[loadedGame]);
   const [lastGame, setLastGame] = useState(games[loadedGame]);
-  const [gameServer, setGameServer] = useState(games[loadedGame].server)
+  const [gameServer, setGameServer] = useState("")
   const [autoConnect, setAutoConnect] = useState(false)
 
 
-  useEffect(() => {
+  useEffect(()=>{
+    console.log("USE EFFECT");
     setGame(games[loadedGame])
-  }, [loadedGame]);
+    const keys = Object.keys(game.server)
+    //@ts-expect-error its ok
+    setGameServer(game.server[keys[0]])
+  },[loadedGame])
 
-  useApiReceiveEffect(EChannels.configGame, (data: EGameNames) => {
-    if (data !== game.lowerName) {
-      setLoadedGame(data);
-      setGame(games[data]);
-      
-    } else {
-      setLoadedGame(data);
-      setGameServer(games[data].server)
-    }
-  });
+  //@ts-expect-error but it is tho
+  const handleGameChange = (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+    console.log(game);
+    
+         e.preventDefault()
+        if(!bothGamesInstalled){
+          alert(`you must install ${game.next}`)
+          return
+        } 
 
-  const handleGameChange = () => {
-            if (lock) return;
-            if (game.name === "None") {
-              setLock(true);
-              apiSend(EChannels.configGame, lastGame.lowerName);
-              return;
-            }
-            setGame((game) => {
-              setLastGame(game); 
-              return games[game.next]}
-              );
-            
-            // ui only lock
-            setLock(true);
-            apiSend(EChannels.configGame, game.next);
-          }
+        if (game.name === "None") {
+          apiSend(EChannels.configGame, lastGame.lowerName as EGameNames);
+          return;
+        }
+        setGame((game) => {
+          setLastGame(game); 
+          return games[game.next]}
+          );
+
+        
+        // ui only lock
+        setLock(true);
+        apiSend(EChannels.configGame, game.next);
+      }
 
   return (
     <>
@@ -85,15 +86,14 @@ function GameSwitcher() {
         className="splash"
         style={{ backgroundImage: `url(${games[loadedGame].bg})` }}
       ></div>
-      <div className="splashClickArea"
-        onClick={() => handleGameChange()}
+      <div className={bothGamesInstalled ? "splashClickArea" : "splashArea"}
+        onClick={(e) => handleGameChange(e)}
       >
         <h2
           className={`${lock ? "locked" : "unlocked"} ${
             playing ? "playing" : ""
           } selectGame`}
           style={{ display: loadedStore ? "block" : "none"}}
-          onClick={() => handleGameChange()}
         >
           Loaded Game: {game.name}
         </h2>
@@ -122,10 +122,25 @@ function GameSwitcher() {
           >
             Play Game
           </button>
-          <div style={{display:"flex"}}>
-          <input onChange={()=> setAutoConnect(!autoConnect)} checked={autoConnect} type='checkbox'/>
-          <div style={{margin:2}}>Auto Connect to {gameServer}</div>
-          </div>
+          {game.lowerName === EGameNames.legacy ? <div style={{margin: 20}}>
+            <div onClick={()=> setAutoConnect(!autoConnect)} style={{fontSize:18, fontWeight: 'bold', cursor:'pointer', userSelect:'none'}}>Auto Connect: <input style={{cursor:'pointer'}} onChange={()=> setAutoConnect(!autoConnect)} checked={autoConnect} type='checkbox'/></div>
+            <select
+              onChange={e => {
+                console.log(e.target.value);
+                
+                setGameServer(e.target.value)
+              }}
+            >
+
+            {Object.keys(game.server).map((el)=> {
+              //@ts-expect-error its ok
+              return <option value={game.server[el]}>{el}</option>
+            })}
+            </select>
+            <div style={{color: 'lightblue'}}>{gameServer}</div>
+          {/* 
+          <div style={{margin:2}}>Auto Connect to {gameServer}</div> */}
+          </div>: null}
         </div>
       </div>
     </>

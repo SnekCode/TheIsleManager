@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  user-select: none;
 }
 
 .splash {
@@ -18,6 +19,16 @@
   background-size: 100% 50%;
   filter: blur(0.8px);
   transition: all 0.3s ease-in-out;
+}
+
+.splashkArea {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: 99.7%;
+  height: 45%;
+  background-color: transparent;
+  border: $actionItemBorder;
 }
 
 .splashClickArea {

@@ -8,5 +8,5 @@ interface IButtonProps {
 }
 
 export default function Button(props: IButtonProps) {
-  return <button onClick={props.onClick}>{props.children}</button>
+  return <button style={{margin:42}} onClick={props.onClick}>{props.children}</button>
 }

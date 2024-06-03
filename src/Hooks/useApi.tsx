@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 import { IStore, IStoreKeys } from "~/Shared/Store";
-import { channelLog } from "~/Shared/channels";
+import { channelLog, IChannelKeys, IChannelReceive, IChannelSend} from "~/Shared/channels";
 
-export const useApiReceiveEffect = (
-  channel: string,
-  callback: (data: any) => void
+
+
+/*
+
+Last change made here was to set up a channel api using TS.  
+A channel receive interface that shows the type expected to be returned to the front end
+A channel send interface that shows the type expected to be sent to the back end
+Each depends on the channel name
+This is defined in ./Shared/channels.ts
+*/
+
+export const useApiReceiveEffect = <K extends keyof IChannelReceive> (
+  channel: K,
+  callback: (data: IChannelReceive[K]) => void
 ) => {
   useEffect(() => {
     window.api.receive(channel, (data: any) => {
@@ -20,7 +31,7 @@ export const useApiReceiveEffect = (
   }, [channel, callback]);
 };
 
-export const useApiSendEffect = (channel: string, data: any) => {
+export const useApiSendEffect = (channel: IChannelKeys, data: any) => {
   useEffect(() => {
     channelLog(channel, "sending", data);
     window.api.send(channel, data);
@@ -32,7 +43,7 @@ export const useApiSendEffect = (channel: string, data: any) => {
   }, [data, channel]);
 };
 
-export const apiSend = (channel: string, data: any) => {
+export const apiSend = <K extends keyof IChannelSend>(channel: K, data: IChannelSend[K]) => {
   channelLog(channel, "sending", data);
   window.api.send(channel, data);
 };
@@ -61,4 +72,13 @@ export const apiRetrieve = <K extends IStoreKeys>(
     channelLog("retrieveFromStore", "receiving", data);
     callback(data);
   });
+};
+
+export const apiSave = <K extends IStoreKeys>(
+  name: K,
+  data: IStore[K]
+) => {
+  channelLog("saveToStore", "sending", name);
+
+  window.api.saveToStore(name, data)
 };
