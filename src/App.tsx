@@ -18,6 +18,7 @@ function App() {
     return (
       <div>
         <UpdateBar/>
+        <div style={{color:'lightblue', marginLeft:42}}>After selecting your legacy install it will be moved to support Installing Evrima via Steam</div>
         <GameSelector name={EGameNames.legacy}/>
         <GameSelector name={EGameNames.evrima}/>
         <Button onClick={()=> saveConfigState("complete")}>Continue</Button>

@@ -6,9 +6,13 @@ export interface IStore {
   "legacyInstall": boolean,
   "evrimaInstall": boolean,
   "legacyServers": string[],
+  "legacyStarted": boolean,
   "evrimaServers": string[],
+  "evrimaStarted": boolean,
   "legacyInstallPath": string,
-  "evrimaInstallPath": string
+  "evrimaInstallPath": string,
+  "evrimaAppData": void,
+  "legacyAppData": void
 }
 
 export type IStoreKeys = keyof IStore;

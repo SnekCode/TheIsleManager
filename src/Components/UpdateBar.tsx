@@ -41,21 +41,21 @@ const UpdateBar = () => {
   })
   
 
-  useApiReceiveEffect(EChannels.updateAvailable, (show: boolean) => {
+  useApiReceiveEffect(EChannels.updateAvailable, (show) => {
     channelLog(EChannels.updateAvailable, "receiving", show);
     setShowUpdateBar(show);
   });
-  useApiReceiveEffect(EChannels.updateDownloaded, (bool: boolean) => {
+  useApiReceiveEffect(EChannels.updateDownloaded, (bool) => {
     channelLog(EChannels.updateDownloaded, "receiving", bool);
     setDownLoaded(bool);
   });
-  useApiReceiveEffect(EChannels.updateInfo, (version: string) => {
+  useApiReceiveEffect(EChannels.updateInfo, (version) => {
     channelLog(EChannels.updateInfo, "receiving", version);
     setUpdateMessage(`Update to version ${version} available!`);
   });
   useApiReceiveEffect(
     EChannels.updateDownloadProgress,
-    (progress: ProgressInfo) => {
+    (progress) => {
       channelLog(EChannels.updateDownloadProgress, "receiving", progress);
       setDownloadProgress(progress);
       if (progress.percent > 99.9) {

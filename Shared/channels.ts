@@ -1,3 +1,4 @@
+import {ProgressInfo} from 'electron-updater';
 import {EGameNames} from './gamenames';
 
 export enum EChannels {
@@ -5,6 +6,7 @@ export enum EChannels {
   startGame = 'startGame',
   configGame = 'configGame',
   setupLegacy = 'setupLegacy',
+  openDialog = 'openDialog',
   test = 'test',
   hideMessage = 'hideMessage',
   showMessage = 'showMessage',
@@ -16,23 +18,46 @@ export enum EChannels {
   update = "update",
   updateDownloadProgress = "updateDownloadProgress",
   updateInfo = "updateInfo",
-  checkInstall = "checkInstall",
-  changeInstallPath ="changeInstallPath"
+  // checkInstall = "checkInstall",
+  changeInstallPath ="changeInstallPath",
+  unInstallPath = "unInstallPath",
+  loadedGame = "loadedGame"
 }
 
 export interface IChannelReceive {
-  checkInstall: {name: EGameNames, isInstalled: boolean}
-  changeInstallPath: (name:EGameNames, path: string) => boolean
+  lock: (bool:boolean) => boolean
+  loadedGame: () => EGameNames
+  playing: (bool:boolean) => boolean
+  // checkInstall: {name: EGameNames, isInstalled: boolean}
+  changeInstallPath: (name:EGameNames, path: string) => [boolean, string]
+  openDialog: ()=> any
+  updateAvailable:  boolean
+  updateDownloaded: boolean
+  updateInfo: string
+  updateDownloadProgress: ProgressInfo
 }
 
 export interface IChannelSend {
-  checkInstall: (name: EGameNames) => void
-  changeInstallPath: (name:EGameNames, path: string) => void
+  // checkInstall: (name: EGameNames) => void
+  unInstallPath: EGameNames
+  update: boolean
+  configGame: EGameNames
+  setupLegacy: null
 }
 
 export interface IChannels {
-  checkInstall: (name: EGameNames) => {name: EGameNames, isInstalled: boolean}
-  changeInstallPath: (name:EGameNames, path: string) => boolean
+  updateDownloadProgress: ProgressInfo
+  updateInfo: (s:string)=>string
+  updateDownloaded: (bool:boolean)=> boolean
+  updateAvailable: (bool:boolean) => boolean
+  lock: (bool:boolean)=> boolean
+  loadedGame: () => EGameNames
+  playing: (bool:boolean) => boolean
+  // checkInstall: (name: EGameNames) => {name: EGameNames, isInstalled: boolean}
+  changeInstallPath: (name:EGameNames, path: string) => [boolean, string]
+  openDialog: ()=> any
+  setUpConfig: ()=>void
+  unInstallPath: EGameNames
 }
 
 export type IChannelKeys = keyof IChannels;

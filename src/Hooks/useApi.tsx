@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
 import { IStore, IStoreKeys } from "~/Shared/Store";
-import { channelLog, EChannels, IChannelKeys, IChannelReceive, IChannels} from "~/Shared/channels";
+import { channelLog, IChannelKeys, IChannelReceive, IChannelSend} from "~/Shared/channels";
 
 
 
@@ -14,12 +14,12 @@ Each depends on the channel name
 This is defined in ./Shared/channels.ts
 */
 
-export const useApiReceiveEffect = <K extends IChannelKeys> (
+export const useApiReceiveEffect = <K extends keyof IChannelReceive> (
   channel: K,
   callback: (data: IChannelReceive[K]) => void
 ) => {
   useEffect(() => {
-    window.api.receive(channel, (data) => {
+    window.api.receive(channel, (data: any) => {
       channelLog(channel, "receiving", data);
       callback(data);
     });
@@ -43,7 +43,7 @@ export const useApiSendEffect = (channel: IChannelKeys, data: any) => {
   }, [data, channel]);
 };
 
-export const apiSend = (channel: EChannels, data: any) => {
+export const apiSend = <K extends keyof IChannelSend>(channel: K, data: IChannelSend[K]) => {
   channelLog(channel, "sending", data);
   window.api.send(channel, data);
 };
