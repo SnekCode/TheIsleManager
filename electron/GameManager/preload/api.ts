@@ -28,5 +28,12 @@ contextBridge.exposeInMainWorld(
     saveToStore: (name: string, data: any) => {
       ipcRenderer.invoke("setStore", name, data);
     },
+
+    retrieveFromServerStore: (name: string, func: Function) => {
+      ipcRenderer.invoke("getServer", name).then((result) => func(result));
+    },
+    saveToServerStore: (name: string, data: string) => {
+      ipcRenderer.invoke("setServer", name, data);
+    },
   })
 );

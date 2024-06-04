@@ -18,7 +18,8 @@ import "../updater/updater";
 
 // load main ipc actions
 import "../GameManager/main/actions";
-import {store} from "./store";
+import {store} from "./store/store";
+import "./store/serverStore"
 
 // handle file config
 import {setupConfig} from "../GameManager/setupConfig";

@@ -2,7 +2,7 @@ import fs, {} from 'fs'
 import { execFile } from 'child_process';
 import { EGameNames } from 'Shared/gamenames';
 import {app} from 'electron'
-import {store} from '../main/store'
+import {store} from '../main/store/store'
 
 const userData = app.getPath('userData')
 

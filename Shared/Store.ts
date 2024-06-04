@@ -13,6 +13,13 @@ export interface IStore {
   "evrimaInstallPath": string,
   "evrimaAppData": void,
   "legacyAppData": void
-}
+};
 
 export type IStoreKeys = keyof IStore;
+
+
+export interface IServerStore{
+  [key:string]: string
+};
+
+export type IServerStoreKeys = keyof IServerStore;

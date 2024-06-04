@@ -2,7 +2,7 @@
 import { Menu, app, shell } from 'electron';
 import path from 'node:path';
 process.env.DIST = path.join(__dirname, '../dist')
-import {store} from './store'
+import {store} from './store/store'
 import { EGameNames } from '~/Shared/gamenames';
 import fs from 'fs';
 import {setupConfig} from '../GameManager/setupConfig';

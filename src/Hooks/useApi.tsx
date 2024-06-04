@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from "react";
-import { IStore, IStoreKeys } from "~/Shared/Store";
+import { IStore, IServerStore, IStoreKeys } from "~/Shared/Store";
 import { channelLog, IChannelKeys, IChannelReceive, IChannelSend} from "~/Shared/channels";
 
 
@@ -81,4 +81,27 @@ export const apiSave = <K extends IStoreKeys>(
   channelLog("saveToStore", "sending", name);
 
   window.api.saveToStore(name, data)
+};
+
+
+// Server Store channel functions
+export const apiServerRetrieve = <K extends IStoreKeys>(
+  name: K,
+  callback: (data: IServerStore[K]) => void
+) => {
+  channelLog("retrieveFromStore", "sending", name);
+
+  window.api.retrieveFromServerStore(name, (data: IServerStore[K]) => {
+    channelLog("retrieveFromStore", "receiving", data);
+    callback(data);
+  });
+};
+
+export const apiServerSave = <K extends IStoreKeys>(
+  name: K,
+  data: IServerStore[K]
+) => {
+  channelLog("saveToStore", "sending", name);
+
+  window.api.saveToServerStore(name, data)
 };

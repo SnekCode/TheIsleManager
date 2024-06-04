@@ -1,6 +1,6 @@
 import { ipcMain, dialog } from "electron";
 import { getWin, win } from "~/electron/main/main";
-import {store} from '../../main/store'
+import {store} from '../../main/store/store'
 import {
   startGame,
   setUpLegacy,

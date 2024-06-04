@@ -34,6 +34,8 @@ interface Window {
     invoke: (channel: string, data: any, func: Function) => void
     retrieveFromStore: (name: string, func: Function) => void
     saveToStore: (name: string, data: any) => void
+    retrieveFromServerStore: (name: string, func: Function) => void
+    saveToServerStore: (name: string, data: string) => void
   }
   init: {
     setupLegacy: () => void
